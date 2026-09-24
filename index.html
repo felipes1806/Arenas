@@ -6,766 +6,835 @@
 
     <title>Turnero de Atención</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* =========================================================
+           ESTILOS GENERALES
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5efe5;
+            color: #3f3428;
+            min-height: 100vh;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           CONTENEDOR PRINCIPAL
+        ========================================================= */
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        /* =========================================================
+           ENCABEZADO
+        ========================================================= */
+
+        header {
+            background: #d9c2a3;
+            border-bottom: 3px solid #b99a73;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 30px;
+            letter-spacing: 1px;
+            color: #3b3025;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 16px;
+            color: #5d4c39;
+        }
+
+        /* =========================================================
+           BOTÓN ADMINISTRACIÓN
+        ========================================================= */
+
+        .admin-button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .admin-button {
+            background: #6f5a43;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .admin-button:hover {
+            background: #554431;
+        }
+
+        /* =========================================================
+           TURNO ACTUAL
+        ========================================================= */
+
+        .current-turn-card {
+            background: #fffaf3;
+            border: 2px solid #d8c5aa;
+            border-radius: 15px;
+            padding: 35px 20px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(80, 60, 40, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .current-turn-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #77644e;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .current-turn-number {
+            font-size: 90px;
+            line-height: 1;
+            font-weight: bold;
+            color: #4e3d2c;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .current-message {
+            font-size: 17px;
+            color: #675643;
+        }
+
+        /* =========================================================
+           TARJETAS DE INFORMACIÓN
+        ========================================================= */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: #fffaf3;
+            border: 1px solid #ddcbb4;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .info-card-title {
+            color: #806c55;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            color: #4c3b2b;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           SECCIÓN DE TURNOS
+        ========================================================= */
+
+        .section-title {
+            text-align: center;
+            font-size: 22px;
+            color: #4b3b2b;
+            margin-bottom: 18px;
+        }
+
+        .turn-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .turn-card {
+            background: #fffaf3;
+            border: 1px solid #d7c4aa;
+            border-radius: 10px;
+            min-height: 95px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .turn-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(70, 50, 30, 0.1);
+        }
+
+        .turn-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4b3a29;
+            margin-bottom: 6px;
+        }
+
+        .turn-status {
+            font-size: 12px;
+            color: #806c55;
+        }
+
+        .turn-card.called {
+            background: #dfd1bd;
+            border-color: #bca486;
+        }
+
+        .turn-card.current {
+            background: #c6ad8d;
+            border-color: #947554;
+        }
+
+        .turn-card.current .turn-number,
+        .turn-card.current .turn-status {
+            color: #2f251c;
+        }
+
+        .turn-card.delivered {
+            background: #eee5d8;
+        }
+
+        /* =========================================================
+           PIE DE PÁGINA
+        ========================================================= */
+
+        footer {
+            text-align: center;
+            padding: 30px 15px 20px;
+            color: #88745c;
+            font-size: 13px;
+        }
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(40, 30, 20, 0.58);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fffaf3;
+            width: 100%;
+            max-width: 900px;
+            max-height: 92vh;
+            overflow-y: auto;
+            border-radius: 15px;
+            padding: 28px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 25px;
+            color: #473727;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            color: #806c55;
+            margin-bottom: 25px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 18px;
+            border: none;
+            background: transparent;
+            font-size: 28px;
+            color: #77634e;
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           LOGIN
+        ========================================================= */
+
+        .login-box {
+            max-width: 420px;
+            margin: 10px auto;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #5b4936;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #ccb99e;
+            border-radius: 7px;
+            background: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #947555;
+        }
+
+        .primary-button {
+            width: 100%;
+            background: #6d5842;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .primary-button:hover {
+            background: #53422f;
+        }
+
+        .error-message {
+            color: #a33f35;
+            font-size: 14px;
+            margin-top: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        /* =========================================================
+           PANEL ADMINISTRADOR
+        ========================================================= */
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-top {
+            background: #eadfce;
+            border: 1px solid #d1bfa5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .admin-current {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-current-label {
+            font-size: 14px;
+            color: #77634d;
+            margin-bottom: 5px;
+        }
+
+        .admin-current-number {
+            font-size: 55px;
+            font-weight: bold;
+            color: #493827;
+        }
+
+        .admin-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .admin-buttons button {
+            border: none;
+            border-radius: 7px;
+            padding: 12px;
+            background: #725c44;
+            color: white;
+            font-weight: bold;
+        }
+
+        .admin-buttons button:hover {
+            background: #55432f;
+        }
+
+        .admin-buttons .secondary {
+            background: #b69a77;
+        }
+
+        .admin-buttons .secondary:hover {
+            background: #967b5a;
+        }
+
+        .admin-section {
+            background: #fffdf9;
+            border: 1px solid #dfcdb4;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .admin-section h3 {
+            color: #4b3928;
+            margin-bottom: 15px;
+        }
+
+        /* =========================================================
+           LLAMAR TURNO ESPECÍFICO
+        ========================================================= */
+
+        .specific-turn {
+            display: flex;
+            gap: 10px;
+        }
+
+        .specific-turn input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #ccb99e;
+            border-radius: 7px;
+        }
+
+        .specific-turn button {
+            border: none;
+            background: #6d5842;
+            color: white;
+            border-radius: 7px;
+            padding: 0 18px;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           LISTA DE TURNOS ENTREGADOS
+        ========================================================= */
+
+        .delivered-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .delivered-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f3ecdf;
+            border: 1px solid #ddcbb4;
+            border-radius: 7px;
+        }
+
+        .delivered-item strong {
+            font-size: 15px;
+        }
+
+        .delivered-item button {
+            border: none;
+            border-radius: 5px;
+            padding: 7px 9px;
+            background: #80684c;
+            color: white;
+            font-size: 12px;
+        }
+
+        .delivered-item button:hover {
+            background: #624e38;
+        }
+
+        /* =========================================================
+           USUARIOS
+        ========================================================= */
+
+        .add-user-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .add-user-form input {
+            padding: 11px;
+            border: 1px solid #ccb99e;
+            border-radius: 7px;
+        }
+
+        .add-user-form button {
+            border: none;
+            background: #6d5842;
+            color: white;
+            padding: 0 18px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11px;
+            border: 1px solid #ddcbb4;
+            background: #f5eee3;
+            border-radius: 7px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #4e3c2b;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #806b53;
+            margin-left: 5px;
+        }
+
+        .delete-user {
+            border: none;
+            background: #a45a4e;
+            color: white;
+            padding: 7px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .delete-user:hover {
+            background: #813d34;
+        }
+
+        .logout-button {
+            width: 100%;
+            border: none;
+            background: #9b8061;
+            color: white;
+            border-radius: 7px;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .logout-button:hover {
+            background: #796246;
+        }
+
+        /* =========================================================
+           RESPONSIVE - TABLET
+        ========================================================= */
+
+        @media (max-width: 800px) {
+
+            .container {
+                padding: 18px;
+            }
+
+            .turn-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .add-user-form {
+                grid-template-columns: 1fr;
+            }
+
+            .add-user-form button {
+                padding: 12px;
+            }
+        }
+
+        /* =========================================================
+           RESPONSIVE - CELULAR
+        ========================================================= */
+
+        @media (max-width: 550px) {
+
+            header {
+                padding: 20px 12px;
+            }
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            header p {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .container {
+                padding: 14px;
+            }
+
+            .admin-button-container {
+                justify-content: center;
+            }
+
+            .admin-button {
+                width: 100%;
+            }
+
+            .current-turn-card {
+                padding: 28px 15px;
+            }
+
+            .current-turn-number {
+                font-size: 70px;
+            }
+
+            .current-message {
+                font-size: 15px;
+                line-height: 1.4;
+            }
+
+            .turn-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .turn-card {
+                min-height: 80px;
+            }
+
+            .turn-number {
+                font-size: 20px;
+            }
+
+            .turn-status {
+                font-size: 10px;
+                text-align: center;
+            }
+
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-content {
+                padding: 22px 15px;
+                max-height: 95vh;
+            }
+
+            .modal-title {
+                font-size: 21px;
+                padding-right: 30px;
+            }
+
+            .delivered-list {
+                grid-template-columns: 1fr;
+            }
+
+            .specific-turn {
+                flex-direction: column;
+            }
+
+            .specific-turn button {
+                padding: 12px;
+            }
+
+            .admin-current-number {
+                font-size: 45px;
+            }
+        }
+
+        @media (max-width: 360px) {
+
+            .turn-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .current-turn-number {
+                font-size: 60px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =========================
-         PÁGINA PRINCIPAL
-    ========================== -->
+    <!-- =========================================================
+         ENCABEZADO
+    ========================================================== -->
 
-    <div class="page">
+    <header>
+        <h1>SISTEMA DE ATENCIÓN</h1>
+        <p>Turnero para control y llamado de clientes</p>
+    </header>
 
-        <header class="header">
-            <div class="header-content">
 
-                <div class="header-text">
-                    <p class="header-small">SISTEMA DE ATENCIÓN</p>
+    <!-- =========================================================
+         CONTENIDO PRINCIPAL
+    ========================================================== -->
 
-                    <h1>Turnero de Atención</h1>
+    <main class="container">
 
-                    <p class="header-description">
-                        Tome un turno físico y espere a que sea llamado en pantalla.
-                    </p>
-                </div>
-
-                <button id="adminButton" class="admin-button">
-                    Administración
-                </button>
-
-            </div>
-        </header>
-
-
-        <main class="main-content">
-
-            <!-- TURNO ACTUAL -->
-
-            <section class="current-section">
-
-                <div class="section-label">
-                    TURNO ACTUAL
-                </div>
-
-                <div id="currentTurn" class="current-turn">
-                    ---
-                </div>
-
-                <p id="currentMessage" class="current-message">
-                    Esperando el inicio de la jornada
-                </p>
-
-            </section>
-
-
-            <!-- INFORMACIÓN -->
-
-            <section class="info-grid">
-
-                <div class="info-card">
-                    <span class="info-number">25</span>
-                    <span class="info-title">Turnos</span>
-                    <span class="info-text">Disponibles por jornada</span>
-                </div>
-
-                <div class="info-card">
-                    <span id="lastCalled" class="info-number">---</span>
-                    <span class="info-title">Último llamado</span>
-                    <span class="info-text">Turno llamado</span>
-                </div>
-
-                <div class="info-card">
-                    <span id="deliveredCount" class="info-number">0</span>
-                    <span class="info-title">Entregados</span>
-                    <span class="info-text">Turnos registrados</span>
-                </div>
-
-            </section>
-
-
-            <!-- TURNOS -->
-
-            <section class="turns-section">
-
-                <div class="section-heading">
-                    <div>
-                        <p class="section-kicker">ESTADO DE LA JORNADA</p>
-                        <h2>Turnos</h2>
-                    </div>
-                </div>
-
-                <div id="turnGrid" class="turn-grid"></div>
-
-            </section>
-
-        </main>
-
-
-        <footer class="footer">
-            <p>
-                Sistema de atención · <span id="currentDate"></span>
-            </p>
-        </footer>
-
-    </div>
-
-
-    <!-- =========================
-         MODAL DE ADMINISTRACIÓN
-    ========================== -->
-
-    <div id="adminModal" class="modal hidden">
-
-        <div class="modal-overlay"></div>
-
-        <div class="modal-container">
-
-            <!-- LOGIN -->
-
-            <div id="loginView">
-
-                <div class="modal-header">
-                    <div>
-                        <p class="modal-kicker">ACCESO RESTRINGIDO</p>
-                        <h2>Administración</h2>
-                    </div>
-
-                    <button id="closeLogin" class="close-button">
-                        ×
-                    </button>
-                </div>
-
-                <p class="modal-description">
-                    Ingrese sus datos para acceder al panel de administración.
-                </p>
-
-                <form id="loginForm">
-
-                    <div class="form-group">
-                        <label for="loginUser">
-                            Usuario
-                        </label>
-
-                        <input
-                            type="text"
-                            id="loginUser"
-                            autocomplete="username"
-                            placeholder="Ingrese su usuario"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="loginPassword">
-                            Contraseña
-                        </label>
-
-                        <input
-                            type="password"
-                            id="loginPassword"
-                            autocomplete="current-password"
-                            placeholder="Ingrese su contraseña"
-                            required
-                        >
-                    </div>
-
-                    <p id="loginError" class="error-message hidden">
-                        Usuario o contraseña incorrectos.
-                    </p>
-
-                    <button type="submit" class="primary-button login-submit">
-                        Ingresar
-                    </button>
-
-                </form>
-
-            </div>
-
-
-            <!-- PANEL ADMIN -->
-
-            <div id="adminView" class="hidden">
-
-                <div class="modal-header">
-
-                    <div>
-                        <p class="modal-kicker">PANEL DE CONTROL</p>
-                        <h2>Administración</h2>
-                    </div>
-
-                    <button id="closeAdmin" class="close-button">
-                        ×
-                    </button>
-
-                </div>
-
-
-                <!-- USUARIO ACTUAL -->
-
-                <div class="logged-user">
-                    <span>Sesión iniciada como</span>
-                    <strong id="loggedUserName">admin</strong>
-                </div>
-
-
-                <!-- TURNO ACTUAL -->
-
-                <div class="admin-current">
-
-                    <div>
-                        <p class="admin-label">
-                            TURNO ACTUAL
-                        </p>
-
-                        <div id="adminCurrentTurn" class="admin-current-number">
-                            ---
-                        </div>
-                    </div>
-
-                    <div class="admin-current-info">
-                        <span id="adminStatus">
-                            Esperando turno
-                        </span>
-                    </div>
-
-                </div>
-
-
-                <!-- BOTONES PRINCIPALES -->
-
-                <div class="admin-actions">
-
-                    <button id="nextButton" class="primary-button">
-                        Llamar siguiente
-                    </button>
-
-                    <button id="repeatButton" class="secondary-button">
-                        Repetir turno
-                    </button>
-
-                    <button id="newDayButton" class="danger-button">
-                        Nueva jornada
-                    </button>
-
-                </div>
-
-
-                <!-- LLAMAR TURNO ESPECÍFICO -->
-
-                <div class="admin-card">
-
-                    <div class="card-title">
-                        Llamar un turno específico
-                    </div>
-
-                    <div class="specific-turn">
-
-                        <select id="specificTurn">
-                            <option value="">Seleccione un turno</option>
-                        </select>
-
-                        <button id="specificButton" class="secondary-button">
-                            Llamar
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- TURNOS ENTREGADOS -->
-
-                <div class="admin-card">
-
-                    <div class="card-title-row">
-
-                        <div>
-                            <div class="card-title">
-                                Turnos entregados
-                            </div>
-
-                            <p class="card-description">
-                                Marque los turnos físicos que ya fueron entregados.
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div id="deliveredList" class="delivered-list"></div>
-
-                </div>
-
-
-                <!-- USUARIOS -->
-
-                <div class="admin-card users-card">
-
-                    <div class="card-title-row">
-
-                        <div>
-                            <div class="card-title">
-                                Usuarios y contraseñas
-                            </div>
-
-                            <p class="card-description">
-                                Agregue o elimine usuarios autorizados para administrar el turnero.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <!-- AGREGAR USUARIO -->
-
-                    <form id="addUserForm" class="add-user-form">
-
-                        <div class="form-group">
-                            <label for="newUsername">
-                                Nuevo usuario
-                            </label>
-
-                            <input
-                                type="text"
-                                id="newUsername"
-                                placeholder="Ej. operador1"
-                                autocomplete="off"
-                                required
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="newPassword">
-                                Contraseña
-                            </label>
-
-                            <input
-                                type="password"
-                                id="newPassword"
-                                placeholder="Ingrese una contraseña"
-                                autocomplete="new-password"
-                                required
-                            >
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="primary-button add-user-button"
-                        >
-                            Agregar usuario
-                        </button>
-
-                    </form>
-
-                    <p id="userMessage" class="success-message hidden"></p>
-
-
-                    <!-- LISTA DE USUARIOS -->
-
-                    <div id="usersList" class="users-list"></div>
-
-                </div>
-
-
-                <!-- CERRAR SESIÓN -->
-
-                <div class="logout-container">
-
-                    <button id="logoutButton" class="logout-button">
-                        Cerrar sesión
-                    </button>
-
-                </div>
-
-            </div>
-
+        <div class="admin-button-container">
+            <button class="admin-button" onclick="openAdmin()">
+                Administración
+            </button>
         </div>
 
-    </div>
 
+        <!-- TURNO ACTUAL -->
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
+        <section class="current-turn-card">
 
-    <script>
+            <div class="current-turn-title">
+                TURNO ACTUAL
+            </div>
 
-        /* =====================================
-           CONFIGURACIÓN
-        ====================================== */
+            <div
+                class="current-turn-number"
+                id="currentTurn">
+                ---
+            </div>
 
-        const TOTAL_TURNS = 25;
+            <div
+                class="current-message"
+                id="currentMessage">
+                Esperando el inicio de la jornada
+            </div>
 
-        const STORAGE_KEY = "turnero_manual_v4";
+        </section>
 
-        const USERS_STORAGE_KEY = "turnero_users_v1";
 
+        <!-- INFORMACIÓN -->
 
-        /* =====================================
-           USUARIO ADMINISTRADOR INICIAL
-        ====================================== */
+        <section class="info-grid">
 
-        const DEFAULT_USERS = [
-            {
-                username: "Jorge",
-                password: "JorgeA"
-            }
-        ];
+            <div class="info-card">
+                <div class="info-card-title">
+                    Turnos disponibles
+                </div>
 
+                <div
+                    class="info-card-value"
+                    id="availableCount">
+                    25
+                </div>
+            </div>
 
-        /* =====================================
-           ESTADO DEL SISTEMA
-        ====================================== */
 
-        let state = loadState();
+            <div class="info-card">
+                <div class="info-card-title">
+                    Último turno llamado
+                </div>
 
-        let users = loadUsers();
+                <div
+                    class="info-card-value"
+                    id="lastCalled">
+                    ---
+                </div>
+            </div>
 
-        let loggedUser = null;
 
+            <div class="info-card">
+                <div class="info-card-title">
+                    Turnos entregados
+                </div>
 
-        /* =====================================
-           ELEMENTOS
-        ====================================== */
+                <div
+                    class="info-card-value"
+                    id="deliveredCount">
+                    0
+                </div>
+            </div>
 
-        const adminButton =
-            document.getElementById("adminButton");
+        </section>
 
-        const adminModal =
-            document.getElementById("adminModal");
 
-        const loginView =
-            document.getElementById("loginView");
+        <!-- LISTA DE TURNOS -->
 
-        const adminView =
-            document.getElementById("adminView");
+        <section>
 
-        const closeLogin =
-            document.getElementById("closeLogin");
+            <h2 class="section-title">
+                Estado de los turnos
+            </h2>
 
-        const closeAdmin =
-            document.getElementById("closeAdmin");
+            <div
+                class="turn-grid"
+                id="turnGrid">
+            </div>
 
-        const loginForm =
-            document.getElementById("loginForm");
+        </section>
 
-        const loginUser =
-            document.getElementById("loginUser");
+    </main>
 
-        const loginPassword =
-            document.getElementById("loginPassword");
 
-        const loginError =
-            document.getElementById("loginError");
+    <!-- =========================================================
+         PIE DE PÁGINA
+    ========================================================== -->
 
-        const loggedUserName =
-            document.getElementById("loggedUserName");
+    <footer>
+        Sistema de Atención · <span id="currentDate"></span>
+    </footer>
 
-        const currentTurn =
-            document.getElementById("currentTurn");
 
-        const currentMessage =
-            document.getElementById("currentMessage");
+    <!-- =========================================================
+         MODAL DE ADMINISTRACIÓN
+    ========================================================== -->
 
-        const lastCalled =
-            document.getElementById("lastCalled");
-
-        const deliveredCount =
-            document.getElementById("deliveredCount");
-
-        const turnGrid =
-            document.getElementById("turnGrid");
-
-        const adminCurrentTurn =
-            document.getElementById("adminCurrentTurn");
-
-        const adminStatus =
-            document.getElementById("adminStatus");
-
-        const nextButton =
-            document.getElementById("nextButton");
-
-        const repeatButton =
-            document.getElementById("repeatButton");
-
-        const newDayButton =
-            document.getElementById("newDayButton");
-
-        const specificTurn =
-            document.getElementById("specificTurn");
-
-        const specificButton =
-            document.getElementById("specificButton");
-
-        const deliveredList =
-            document.getElementById("deliveredList");
-
-        const logoutButton =
-            document.getElementById("logoutButton");
-
-        const addUserForm =
-            document.getElementById("addUserForm");
-
-        const newUsername =
-            document.getElementById("newUsername");
-
-        const newPassword =
-            document.getElementById("newPassword");
-
-        const usersList =
-            document.getElementById("usersList");
-
-        const userMessage =
-            document.getElementById("userMessage");
-
-
-        /* =====================================
-           CARGAR ESTADO
-        ====================================== */
-
-        function loadState() {
-
-            try {
-
-                const saved =
-                    localStorage.getItem(STORAGE_KEY);
-
-                if (saved) {
-
-                    const parsed =
-                        JSON.parse(saved);
-
-                    return {
-                        current: parsed.current || null,
-                        called: Array.isArray(parsed.called)
-                            ? parsed.called
-                            : [],
-                        delivered: Array.isArray(parsed.delivered)
-                            ? parsed.delivered
-                            : []
-                    };
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "No se pudo cargar el estado:",
-                    error
-                );
-
-            }
-
-            return {
-                current: null,
-                called: [],
-                delivered: []
-            };
-        }
-
-
-        /* =====================================
-           GUARDAR ESTADO
-        ====================================== */
-
-        function saveState() {
-
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify(state)
-            );
-        }
-
-
-        /* =====================================
-           CARGAR USUARIOS
-        ====================================== */
-
-        function loadUsers() {
-
-            try {
-
-                const saved =
-                    localStorage.getItem(
-                        USERS_STORAGE_KEY
-                    );
-
-                if (saved) {
-
-                    const parsed =
-                        JSON.parse(saved);
-
-                    if (
-                        Array.isArray(parsed) &&
-                        parsed.length > 0
-                    ) {
-                        return parsed;
-                    }
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "No se pudieron cargar los usuarios:",
-                    error
-                );
-
-            }
-
-            const initialUsers =
-                JSON.parse(
-                    JSON.stringify(DEFAULT_USERS)
-                );
-
-            localStorage.setItem(
-                USERS_STORAGE_KEY,
-                JSON.stringify(initialUsers)
-            );
-
-            return initialUsers;
-        }
-
-
-        /* =====================================
-           GUARDAR USUARIOS
-        ====================================== */
-
-        function saveUsers() {
-
-            localStorage.setItem(
-                USERS_STORAGE_KEY,
-                JSON.stringify(users)
-            );
-        }
-
-
-        /* =====================================
-           FORMATEAR TURNO
-        ====================================== */
-
-        function formatTurn(number) {
-
-            return String(number).padStart(3, "0");
-        }
-
-
-        /* =====================================
-           INICIALIZAR
-        ====================================== */
-
-        function initialize() {
-
-            renderTurnGrid();
-
-            renderSpecificTurns();
-
-            renderDeliveredList();
-
-            renderUsers();
-
-            updateInterface();
-
-            updateDate();
-
-        }
-
-
-        /* =====================================
-           FECHA
-        ====================================== */
-
-        function updateDate() {
-
-            const dateElement =
-                document.getElementById(
-                    "currentDate"
-                );
-
-            const today =
-                new Date();
-
-            dateElement.textContent =
-                today.toLocaleDateString(
-                    "es-CO",
-                    {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric"
-                    }
-                );
-        }
-
-
-        /* =====================================
-           CREAR GRID DE TURNOS
-        ====================================== */
-
-        function renderTurnGrid() {
-
-            turnGrid.innerHTML = "";
-
-            for (
-                let number = 1;
-                number <= TOTAL_TURNS;
-                number++
-            ) {
-
-                const turn =
-                    document.createElement("div");
-
-                turn.className =
-                    "turn-item";
-
-                turn.dataset.number =
-                    number;
-
-                const numberElement =
-                    document.createElement("span");
-
-                numberElement.className =
-                    "turn-number";
-
-                numberElement.textContent =
-                    formatTurn(number);
-
-                const statusElement =
-                    document.createElement("span");
-
-                statusElement.className =
-                    "turn-status";
-
-                turn.appendChild(
-                    numberElement
-                );
-
-                turn.appendChild(
-                    statusElement
-                );
-
-                turnGrid.appendChild(
-                    turn
-                );
-            }
-
-        }
-
-
-        /* =====================================
-           ACTUALIZAR GRID
-        ====================================== */
-
-        function updateTurnGrid() {
-
-            const items =
-                document.querySelectorAll(
-                    ".turn-item"
-                );
-
-            items.forEach(item => {
-
-                const number =
-                    Number(
-                        item.dataset.number
-                    );
-
-                const status =
-                    item.queryS
+    <div
+        class="modal"
+        id="adminModal">
+
+        <div class="modal-content">
+
+            <button
+                class="close-button"
+     
