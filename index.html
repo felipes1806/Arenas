@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,23 +12,36 @@
 <main class="app">
 
   <header class="header">
-    <div>
-      <p class="eyebrow">SISTEMA DE ATENCIÓN</p>
 
-      <h1>Turnero de Atención</h1>
+    <div>
+
+      <p class="eyebrow">
+        SISTEMA DE ATENCIÓN
+      </p>
+
+      <h1>
+        Turnero de Atención
+      </h1>
 
       <p class="subtitle">
         Tome un turno físico y espere a que sea llamado en pantalla.
       </p>
+
     </div>
 
-    <button id="adminOpen" class="button outline">
+    <button
+      id="adminOpen"
+      class="button outline"
+    >
       Administración
     </button>
+
   </header>
 
 
-  <!-- TURNO ACTUAL -->
+  <!-- ==============================
+       TURNO ACTUAL
+  =============================== -->
 
   <section class="display-card">
 
@@ -37,74 +49,130 @@
       TURNO ACTUAL
     </p>
 
-    <div id="currentTurn" class="current-turn">
+    <div
+      id="currentTurn"
+      class="current-turn"
+    >
       ---
     </div>
 
-    <p id="callMessage" class="call-message">
+    <p
+      id="callMessage"
+      class="call-message"
+    >
       Esperando el inicio de la jornada
     </p>
 
   </section>
 
 
-  <!-- INFORMACIÓN -->
+  <!-- ==============================
+       INFORMACIÓN
+  =============================== -->
 
   <section class="info-grid">
 
     <div class="info-card">
-      <span>Turnos de la jornada</span>
-      <strong>25</strong>
+
+      <span>
+        Turnos de la jornada
+      </span>
+
+      <strong>
+        25
+      </strong>
+
     </div>
 
-    <div class="info-card">
-      <span>Último turno llamado</span>
-      <strong id="lastTurn">---</strong>
-    </div>
 
     <div class="info-card">
-      <span>Turnos entregados</span>
-      <strong id="deliveredCount">0</strong>
+
+      <span>
+        Último turno llamado
+      </span>
+
+      <strong id="lastTurn">
+        ---
+      </strong>
+
+    </div>
+
+
+    <div class="info-card">
+
+      <span>
+        Turnos entregados
+      </span>
+
+      <strong id="deliveredCount">
+        0
+      </strong>
+
     </div>
 
   </section>
 
 
-  <!-- ESTADO DE TURNOS -->
+  <!-- ==============================
+       ESTADO DE LOS TURNOS
+  =============================== -->
 
   <section class="turn-list-section">
 
-    <h2>Estado de los turnos</h2>
+    <h2>
+      Estado de los turnos
+    </h2>
 
     <p class="section-text">
       Los turnos físicos corresponden del 001 al 025.
     </p>
 
-    <div id="turnGrid" class="turn-grid"></div>
+    <div
+      id="turnGrid"
+      class="turn-grid"
+    ></div>
 
   </section>
 
 
   <footer>
-    <span>Jornada de atención</span>
+
+    <span>
+      Jornada de atención
+    </span>
+
     <span id="dateLabel"></span>
+
   </footer>
 
 </main>
 
 
-<!-- VENTANA DE ADMINISTRACIÓN -->
 
-<div id="adminModal" class="modal hidden">
+<!-- ==============================
+     VENTANA ADMINISTRACIÓN
+=============================== -->
+
+<div
+  id="adminModal"
+  class="modal hidden"
+>
 
   <div class="modal-box">
 
-    <button id="adminClose" class="modal-close">
+
+    <button
+      id="adminClose"
+      class="modal-close"
+      aria-label="Cerrar"
+    >
       ×
     </button>
 
 
-    <!-- LOGIN -->
+    <!-- ==========================
+         LOGIN
+    =========================== -->
 
     <div id="loginPanel">
 
@@ -122,6 +190,7 @@
 
 
       <form id="loginForm">
+
 
         <label for="username">
           Usuario
@@ -147,7 +216,10 @@
         >
 
 
-        <p id="loginError" class="error"></p>
+        <p
+          id="loginError"
+          class="error"
+        ></p>
 
 
         <button
@@ -159,17 +231,24 @@
 
       </form>
 
+
       <p class="demo-note">
-        La información de acceso se encuentra en
-        <strong>users.txt</strong>.
+        Los datos de acceso están configurados dentro del archivo
+        <strong>index.html</strong>.
       </p>
 
     </div>
 
 
-    <!-- PANEL ADMINISTRADOR -->
 
-    <div id="adminPanel" class="hidden">
+    <!-- ==========================
+         PANEL ADMINISTRADOR
+    =========================== -->
+
+    <div
+      id="adminPanel"
+      class="hidden"
+    >
 
       <p class="eyebrow center">
         PANEL DE CONTROL
@@ -184,6 +263,8 @@
       </p>
 
 
+      <!-- TURNO ACTUAL -->
+
       <div class="admin-current">
 
         <span>
@@ -197,7 +278,10 @@
       </div>
 
 
+      <!-- BOTONES -->
+
       <div class="admin-actions">
+
 
         <button
           id="nextButton"
@@ -222,10 +306,13 @@
           Nueva jornada
         </button>
 
+
       </div>
 
 
-      <!-- LLAMAR TURNO ESPECÍFICO -->
+      <!-- ========================
+           TURNO ESPECÍFICO
+      ========================= -->
 
       <div class="admin-section">
 
@@ -235,7 +322,8 @@
 
         <div class="manual-call">
 
-          <select id="manualTurn"></select>
+          <select id="manualTurn">
+          </select>
 
           <button
             id="manualCallButton"
@@ -249,7 +337,9 @@
       </div>
 
 
-      <!-- TURNOS ENTREGADOS -->
+      <!-- ========================
+           TURNOS ENTREGADOS
+      ========================= -->
 
       <div class="admin-section">
 
@@ -269,6 +359,8 @@
       </div>
 
 
+      <!-- CERRAR SESIÓN -->
+
       <button
         id="logoutButton"
         class="button outline full"
@@ -283,29 +375,57 @@
 </div>
 
 
+
 <script>
 
 /* =========================================================
-   CONFIGURACIÓN
+   CONFIGURACIÓN DEL ADMINISTRADOR
+=========================================================
+
+   CAMBIA ESTAS DOS LÍNEAS PARA CAMBIAR EL ACCESO.
+
+   Ejemplo:
+
+   const ADMIN_USER = "juan";
+   const ADMIN_PASSWORD = "4589";
+
+========================================================= */
+
+const ADMIN_USER = "Jorge Alonso";
+
+const ADMIN_PASSWORD = "";
+
+
+/* =========================================================
+   CONFIGURACIÓN DEL TURNERO
 ========================================================= */
 
 const TOTAL_TURNS = 25;
 
-const STORAGE_KEY = "turnero_manual_v2";
-
-let state = loadState();
-
-let users = [];
+const STORAGE_KEY = "turnero_manual_v3";
 
 
 /* =========================================================
-   FUNCIONES GENERALES
+   ESTADO
+========================================================= */
+
+let state = loadState();
+
+
+/* =========================================================
+   FUNCIÓN CORTA PARA BUSCAR ELEMENTOS
 ========================================================= */
 
 const $ = (id) => {
+
   return document.getElementById(id);
+
 };
 
+
+/* =========================================================
+   FORMATO DE TURNO
+========================================================= */
 
 function padTurn(number) {
 
@@ -327,19 +447,26 @@ function loadState() {
         localStorage.getItem(STORAGE_KEY)
       );
 
+
     if (!saved) {
 
       return {
+
         current: null,
+
         called: [],
+
         delivered: []
+
       };
 
     }
 
+
     return {
 
-      current: saved.current ?? null,
+      current:
+        saved.current ?? null,
 
       called:
         Array.isArray(saved.called)
@@ -353,12 +480,16 @@ function loadState() {
 
     };
 
-  } catch {
+  }
+
+  catch (error) {
 
     return {
 
       current: null,
+
       called: [],
+
       delivered: []
 
     };
@@ -374,115 +505,21 @@ function loadState() {
 
 function saveState() {
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(state)
-  );
-
-}
-
-
-/* =========================================================
-   CARGAR USERS.TXT
-========================================================= */
-
-async function loadUsers() {
-
   try {
 
-    const response =
-      await fetch("users.txt", {
-        cache: "no-store"
-      });
-
-    if (!response.ok) {
-
-      throw new Error(
-        "No se pudo cargar users.txt"
-      );
-
-    }
-
-    const text =
-      await response.text();
-
-
-    users = [];
-
-
-    const lines =
-      text.split(/\r?\n/);
-
-
-    for (const line of lines) {
-
-      const clean =
-        line.trim();
-
-
-      // Ignorar líneas vacías y comentarios
-
-      if (
-        !clean ||
-        clean.startsWith("#")
-      ) {
-
-        continue;
-
-      }
-
-
-      const parts =
-        clean.split(",");
-
-
-      if (parts.length < 3) {
-
-        continue;
-
-      }
-
-
-      const username =
-        parts[0].trim();
-
-      const password =
-        parts[1].trim();
-
-      const role =
-        parts[2].trim().toLowerCase();
-
-
-      users.push({
-
-        username,
-        password,
-        role
-
-      });
-
-    }
-
-
-    return true;
-
-  } catch (error) {
-
-    console.error(
-      "Error leyendo users.txt:",
-      error
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(state)
     );
 
+  }
 
-    /*
-      No ponemos una contraseña fija aquí.
-      Si users.txt no puede leerse,
-      avisamos al administrador.
-    */
+  catch (error) {
 
-    users = [];
-
-    return false;
+    console.warn(
+      "No se pudo guardar el estado.",
+      error
+    );
 
   }
 
@@ -490,33 +527,62 @@ async function loadUsers() {
 
 
 /* =========================================================
-   MOSTRAR TURNOS
+   MOSTRAR PÁGINA
 ========================================================= */
 
 function render() {
 
-  $("currentTurn").textContent =
-    state.current
-      ? padTurn(state.current)
-      : "---";
+
+  /* TURNO ACTUAL */
+
+  if (state.current) {
+
+    $("currentTurn").textContent =
+      padTurn(state.current);
+
+  }
+
+  else {
+
+    $("currentTurn").textContent =
+      "---";
+
+  }
 
 
-  $("lastTurn").textContent =
-    state.current
-      ? padTurn(state.current)
-      : "---";
+  /* ÚLTIMO TURNO */
 
+  if (state.current) {
+
+    $("lastTurn").textContent =
+      padTurn(state.current);
+
+  }
+
+  else {
+
+    $("lastTurn").textContent =
+      "---";
+
+  }
+
+
+  /* CANTIDAD ENTREGADA */
 
   $("deliveredCount").textContent =
     state.delivered.length;
 
+
+  /* MENSAJE */
 
   if (!state.current) {
 
     $("callMessage").textContent =
       "Esperando el inicio de la jornada";
 
-  } else {
+  }
+
+  else {
 
     $("callMessage").textContent =
       "Por favor, acérquese al punto de atención";
@@ -524,14 +590,19 @@ function render() {
   }
 
 
+  /* LIMPIAR GRID */
+
   $("turnGrid").innerHTML = "";
 
+
+  /* CREAR 25 TURNOS */
 
   for (
     let i = 1;
     i <= TOTAL_TURNS;
     i++
   ) {
+
 
     const div =
       document.createElement("div");
@@ -540,6 +611,8 @@ function render() {
     div.className =
       "turn-item";
 
+
+    /* ENTREGADO */
 
     if (
       state.delivered.includes(i)
@@ -552,6 +625,8 @@ function render() {
     }
 
 
+    /* LLAMADO */
+
     if (
       state.called.includes(i)
     ) {
@@ -562,6 +637,8 @@ function render() {
 
     }
 
+
+    /* ACTUAL */
 
     if (
       state.current === i
@@ -581,23 +658,33 @@ function render() {
       state.current === i
     ) {
 
-      status = "En atención";
+      status =
+        "En atención";
 
-    } else if (
+    }
+
+    else if (
       state.called.includes(i)
     ) {
 
-      status = "Llamado";
+      status =
+        "Llamado";
 
-    } else if (
+    }
+
+    else if (
       state.delivered.includes(i)
     ) {
 
-      status = "Entregado";
+      status =
+        "Entregado";
 
-    } else {
+    }
 
-      status = "Disponible";
+    else {
+
+      status =
+        "Disponible";
 
     }
 
@@ -621,6 +708,8 @@ function render() {
   }
 
 
+  /* ACTUALIZAR ADMIN */
+
   if (
     !$("adminPanel")
       .classList
@@ -635,16 +724,30 @@ function render() {
 
 
 /* =========================================================
-   PANEL ADMIN
+   MOSTRAR PANEL ADMINISTRADOR
 ========================================================= */
 
 function renderAdmin() {
 
-  $("adminCurrent").textContent =
-    state.current
-      ? padTurn(state.current)
-      : "---";
 
+  /* TURNO ACTUAL */
+
+  if (state.current) {
+
+    $("adminCurrent").textContent =
+      padTurn(state.current);
+
+  }
+
+  else {
+
+    $("adminCurrent").textContent =
+      "---";
+
+  }
+
+
+  /* SELECTOR DE TURNOS */
 
   const select =
     $("manualTurn");
@@ -659,24 +762,32 @@ function renderAdmin() {
     i++
   ) {
 
+
     const option =
       document.createElement(
         "option"
       );
 
 
-    option.value = i;
+    option.value =
+      i;
+
 
     option.textContent =
       padTurn(i);
 
 
-    select.appendChild(option);
+    select.appendChild(
+      option
+    );
 
   }
 
 
-  $("adminTurnGrid").innerHTML = "";
+  /* LISTA ADMIN */
+
+  $("adminTurnGrid").innerHTML =
+    "";
 
 
   for (
@@ -684,6 +795,7 @@ function renderAdmin() {
     i <= TOTAL_TURNS;
     i++
   ) {
+
 
     const row =
       document.createElement(
@@ -706,17 +818,24 @@ function renderAdmin() {
       state.called.includes(i)
     ) {
 
-      status = "Llamado";
+      status =
+        "Llamado";
 
-    } else if (
+    }
+
+    else if (
       delivered
     ) {
 
-      status = "Entregado";
+      status =
+        "Entregado";
 
-    } else {
+    }
 
-      status = "No entregado";
+    else {
+
+      status =
+        "No entregado";
 
     }
 
@@ -748,37 +867,44 @@ function renderAdmin() {
     `;
 
 
-    row
-      .querySelector("button")
-      .addEventListener(
-        "click",
-        () => {
-
-          if (delivered) {
-
-            state.delivered =
-              state.delivered.filter(
-                x => x !== i
-              );
-
-          } else {
-
-            state.delivered.push(i);
-
-          }
+    const button =
+      row.querySelector(
+        "button"
+      );
 
 
-          state.delivered.sort(
-            (a, b) => a - b
-          );
+    button.addEventListener(
+      "click",
+      () => {
 
 
-          saveState();
+        if (delivered) {
 
-          render();
+          state.delivered =
+            state.delivered.filter(
+              x => x !== i
+            );
 
         }
-      );
+
+        else {
+
+          state.delivered.push(i);
+
+        }
+
+
+        state.delivered.sort(
+          (a, b) => a - b
+        );
+
+
+        saveState();
+
+        render();
+
+      }
+    );
 
 
     $("adminTurnGrid")
@@ -795,6 +921,7 @@ function renderAdmin() {
 
 function callTurn(number) {
 
+
   if (
     number < 1 ||
     number > TOTAL_TURNS
@@ -805,38 +932,51 @@ function callTurn(number) {
   }
 
 
+  /* ESTABLECER TURNO ACTUAL */
+
   state.current =
     number;
 
+
+  /* AGREGAR A LLAMADOS */
 
   if (
     !state.called.includes(number)
   ) {
 
-    state.called.push(number);
+    state.called.push(
+      number
+    );
 
   }
 
+
+  /* ORDENAR */
 
   state.called.sort(
     (a, b) => a - b
   );
 
 
+  /* GUARDAR */
+
   saveState();
+
+
+  /* ACTUALIZAR PÁGINA */
 
   render();
 
 
-  /*
-    Aviso de voz.
-  */
+  /* VOZ */
 
   if (
     "speechSynthesis" in window
   ) {
 
-    window.speechSynthesis.cancel();
+
+    window.speechSynthesis
+      .cancel();
 
 
     const speech =
@@ -858,7 +998,9 @@ function callTurn(number) {
 
 
     window.speechSynthesis
-      .speak(speech);
+      .speak(
+        speech
+      );
 
   }
 
@@ -866,7 +1008,7 @@ function callTurn(number) {
 
 
 /* =========================================================
-   SIGUIENTE TURNO
+   LLAMAR SIGUIENTE
 ========================================================= */
 
 $("nextButton")
@@ -874,7 +1016,9 @@ $("nextButton")
     "click",
     () => {
 
-      let next = null;
+
+      let next =
+        null;
 
 
       for (
@@ -883,11 +1027,13 @@ $("nextButton")
         i++
       ) {
 
+
         if (
           !state.called.includes(i)
         ) {
 
-          next = i;
+          next =
+            i;
 
           break;
 
@@ -896,7 +1042,9 @@ $("nextButton")
       }
 
 
-      if (next === null) {
+      if (
+        next === null
+      ) {
 
         alert(
           "Ya se llamaron los 25 turnos de esta jornada."
@@ -914,7 +1062,7 @@ $("nextButton")
 
 
 /* =========================================================
-   REPETIR TURNO
+   REPETIR
 ========================================================= */
 
 $("repeatButton")
@@ -922,7 +1070,10 @@ $("repeatButton")
     "click",
     () => {
 
-      if (!state.current) {
+
+      if (
+        !state.current
+      ) {
 
         alert(
           "Todavía no hay un turno llamado."
@@ -942,13 +1093,14 @@ $("repeatButton")
 
 
 /* =========================================================
-   TURNO ESPECÍFICO
+   LLAMAR ESPECÍFICO
 ========================================================= */
 
 $("manualCallButton")
   .addEventListener(
     "click",
     () => {
+
 
       const number =
         Number(
@@ -971,13 +1123,16 @@ $("resetButton")
     "click",
     () => {
 
+
       const confirmed =
         confirm(
           "¿Desea iniciar una nueva jornada? Se borrará el estado de los 25 turnos."
         );
 
 
-      if (!confirmed) {
+      if (
+        !confirmed
+      ) {
 
         return;
 
@@ -1004,13 +1159,14 @@ $("resetButton")
 
 
 /* =========================================================
-   ABRIR ADMINISTRACIÓN
+   ABRIR ADMIN
 ========================================================= */
 
 $("adminOpen")
   .addEventListener(
     "click",
-    async () => {
+    () => {
+
 
       $("adminModal")
         .classList
@@ -1028,19 +1184,29 @@ $("adminOpen")
 
 
       $("loginError")
-        .textContent = "";
+        .textContent =
+        "";
 
 
       $("username")
-        .focus();
+        .value =
+        "";
 
 
-      /*
-        Intentamos cargar users.txt
-        cada vez que se abre el login.
-      */
+      $("password")
+        .value =
+        "";
 
-      await loadUsers();
+
+      setTimeout(
+        () => {
+
+          $("username")
+            .focus();
+
+        },
+        100
+      );
 
     }
   );
@@ -1055,6 +1221,7 @@ $("adminClose")
     "click",
     () => {
 
+
       $("adminModal")
         .classList
         .add("hidden");
@@ -1063,10 +1230,13 @@ $("adminClose")
   );
 
 
+/* CERRAR HACIENDO CLIC AFUERA */
+
 $("adminModal")
   .addEventListener(
     "click",
     (event) => {
+
 
       if (
         event.target ===
@@ -1084,13 +1254,14 @@ $("adminModal")
 
 
 /* =========================================================
-   LOGIN
+   INICIAR SESIÓN
 ========================================================= */
 
 $("loginForm")
   .addEventListener(
     "submit",
-    async (event) => {
+    (event) => {
+
 
       event.preventDefault();
 
@@ -1106,62 +1277,55 @@ $("loginForm")
           .value;
 
 
-      /*
-        Volvemos a cargar users.txt
-        antes de comprobar.
-      */
+      /* COMPROBAR */
 
-      const loaded =
-        await loadUsers();
+      if (
+        username ===
+          ADMIN_USER &&
+
+        password ===
+          ADMIN_PASSWORD
+      ) {
 
 
-      if (!loaded) {
+        /* OCULTAR LOGIN */
 
-        $("loginError")
-          .textContent =
-          "No se pudo leer users.txt. Abre la página mediante un servidor local.";
+        $("loginPanel")
+          .classList
+          .add("hidden");
 
-        return;
+
+        /* MOSTRAR PANEL */
+
+        $("adminPanel")
+          .classList
+          .remove("hidden");
+
+
+        /* MOSTRAR INFORMACIÓN */
+
+        renderAdmin();
+
 
       }
 
+      else {
 
-      const user =
-        users.find(
-          item =>
-            item.username ===
-              username &&
-
-            item.password ===
-              password &&
-
-            item.role ===
-              "admin"
-        );
-
-
-      if (!user) {
 
         $("loginError")
           .textContent =
           "Usuario o contraseña incorrectos.";
 
-        return;
+
+        $("password")
+          .value =
+          "";
+
+
+        $("password")
+          .focus();
 
       }
-
-
-      $("loginPanel")
-        .classList
-        .add("hidden");
-
-
-      $("adminPanel")
-        .classList
-        .remove("hidden");
-
-
-      renderAdmin();
 
     }
   );
@@ -1176,6 +1340,7 @@ $("logoutButton")
     "click",
     () => {
 
+
       $("adminPanel")
         .classList
         .add("hidden");
@@ -1187,15 +1352,18 @@ $("logoutButton")
 
 
       $("username")
-        .value = "";
+        .value =
+        "";
 
 
       $("password")
-        .value = "";
+        .value =
+        "";
 
 
       $("loginError")
-        .textContent = "";
+        .textContent =
+        "";
 
     }
   );
@@ -1219,7 +1387,7 @@ $("dateLabel")
 
 
 /* =========================================================
-   INICIAR
+   INICIAR SISTEMA
 ========================================================= */
 
 render();
