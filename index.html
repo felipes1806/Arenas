@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,221 +8,104 @@
     <title>Sistema de Atención</title>
 
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Carga JavaScript después de analizar el HTML -->
+    <script src="script.js" defer></script>
 </head>
 
 <body>
 
-    <!-- ENCABEZADO -->
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+
     <header class="header">
+
         <div class="header-content">
+
             <h1>SISTEMA DE ATENCIÓN</h1>
-            <p>Turnero para control y llamado de clientes</p>
+
+            <p>
+                Turnero para control y llamado de clientes
+            </p>
+
         </div>
+
     </header>
 
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- =========================
+         CONTENIDO PRINCIPAL
+    ========================== -->
+
     <main class="container">
 
-        <!-- MENÚ DE AYUDA -->
-        <div class="help-overlay" id="helpMenu">
 
-            <div class="help-menu">
+        <!-- =========================
+             BOTONES SUPERIORES
+        ========================== -->
 
-                <button
-                    class="help-close"
-                    id="closeHelpButton"
-                    aria-label="Cerrar ayuda">
-                    ×
-                </button>
-
-                <div class="help-header">
-
-                    <div class="help-icon">
-                        ?
-                    </div>
-
-                    <div>
-                        <h2>AYUDA DEL SISTEMA</h2>
-
-                        <p>
-                            Aquí encontrarás información sobre cómo funciona
-                            el sistema de turnos.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="help-content">
-
-                    <div class="help-item">
-
-                        <div class="help-number">
-                            1
-                        </div>
-
-                        <div>
-                            <h3>Tome un turno</h3>
-
-                            <p>
-                                Solicite su turno en el punto de atención.
-                                Recuerde conservar el número que le fue entregado.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="help-item">
-
-                        <div class="help-number">
-                            2
-                        </div>
-
-                        <div>
-                            <h3>Espere su turno</h3>
-
-                            <p>
-                                Permanezca atento a la pantalla. Allí podrá
-                                observar el turno que está siendo atendido.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="help-item">
-
-                        <div class="help-number">
-                            3
-                        </div>
-
-                        <div>
-                            <h3>Cuando sea llamado</h3>
-
-                            <p>
-                                Cuando su número aparezca como turno actual,
-                                diríjase al punto de atención indicado.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="help-item">
-
-                        <div class="help-number">
-                            4
-                        </div>
-
-                        <div>
-                            <h3>¿Necesita ayuda?</h3>
-
-                            <p>
-                                Si tiene alguna dificultad o no sabe dónde
-                                dirigirse, solicite ayuda al personal de atención.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="help-item">
-
-                        <div class="help-number">
-                            5
-                        </div>
-
-                        <div>
-                            <h3>Estados de los turnos</h3>
-
-                            <p>
-                                Los turnos pueden aparecer como disponibles,
-                                llamados o atendidos dependiendo de su estado.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="help-item">
-
-                        <div class="help-number">
-                            6
-                        </div>
-
-                        <div>
-                            <h3>Administración</h3>
-
-                            <p>
-                                El botón de Administración es únicamente para
-                                el personal autorizado encargado de llamar los turnos.
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="help-footer">
-
-                    <button
-                        class="help-understood"
-                        id="understoodHelpButton">
-                        Entendido
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- BOTONES SUPERIORES -->
         <div class="top-buttons">
 
             <button
+                type="button"
                 class="help-button"
                 id="openHelpButton">
+
                 Ayuda
+
             </button>
 
+
             <button
+                type="button"
                 class="admin-button"
                 id="openAdminButton">
+
                 Administración
+
             </button>
 
         </div>
 
 
-        <!-- TURNO ACTUAL -->
+        <!-- =========================
+             TURNO ACTUAL
+        ========================== -->
+
         <section class="current-turn-card">
 
             <div class="current-turn-title">
                 TURNO ACTUAL
             </div>
 
+
             <div
                 class="current-turn-number"
                 id="currentTurn">
+
                 ---
+
             </div>
+
 
             <div
                 class="current-message"
                 id="currentMessage">
+
                 Esperando el inicio de la jornada
+
             </div>
 
         </section>
 
 
-        <!-- INFORMACIÓN -->
+        <!-- =========================
+             INFORMACIÓN
+        ========================== -->
+
         <section class="info-grid">
+
 
             <div class="info-card">
 
@@ -232,7 +116,9 @@
                 <div
                     class="info-card-value"
                     id="availableCount">
+
                     25
+
                 </div>
 
             </div>
@@ -247,7 +133,9 @@
                 <div
                     class="info-card-value"
                     id="lastCalled">
+
                     ---
+
                 </div>
 
             </div>
@@ -262,20 +150,27 @@
                 <div
                     class="info-card-value"
                     id="deliveredCount">
+
                     0
+
                 </div>
 
             </div>
 
+
         </section>
 
 
-        <!-- ESTADO DE TURNOS -->
+        <!-- =========================
+             ESTADO DE TURNOS
+        ========================== -->
+
         <section class="turn-section">
 
             <h2 class="section-title">
                 Estado de los turnos
             </h2>
+
 
             <div
                 class="turn-grid"
@@ -287,7 +182,10 @@
     </main>
 
 
-    <!-- PIE DE PÁGINA -->
+    <!-- =========================
+         PIE DE PÁGINA
+    ========================== -->
+
     <footer class="footer">
 
         Sistema de Atención ·
@@ -297,21 +195,237 @@
     </footer>
 
 
-    <!-- MODAL DE ADMINISTRACIÓN -->
+    <!-- =========================
+         MENÚ DE AYUDA
+    ========================== -->
+
+    <div
+        class="help-overlay"
+        id="helpMenu">
+
+
+        <div class="help-menu">
+
+
+            <button
+                type="button"
+                class="help-close"
+                id="closeHelpButton">
+
+                ×
+
+            </button>
+
+
+            <div class="help-header">
+
+
+                <div class="help-icon">
+                    ?
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        AYUDA DEL SISTEMA
+                    </h2>
+
+                    <p>
+                        Información para utilizar
+                        correctamente el sistema de turnos.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="help-content">
+
+
+                <div class="help-item">
+
+                    <div class="help-number">
+                        1
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Tome un turno
+                        </h3>
+
+                        <p>
+                            Solicite su turno en el punto
+                            de atención y conserve el número
+                            que le fue entregado.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <div class="help-number">
+                        2
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Espere su turno
+                        </h3>
+
+                        <p>
+                            Permanezca atento a la pantalla
+                            para saber cuándo será llamado.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <div class="help-number">
+                        3
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Cuando sea llamado
+                        </h3>
+
+                        <p>
+                            Cuando su número aparezca como
+                            turno actual, diríjase al punto
+                            de atención.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <div class="help-number">
+                        4
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            ¿Necesita ayuda?
+                        </h3>
+
+                        <p>
+                            Si tiene alguna dificultad,
+                            solicite ayuda al personal
+                            de atención.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <div class="help-number">
+                        5
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Estados de los turnos
+                        </h3>
+
+                        <p>
+                            Los turnos muestran si están
+                            disponibles, llamados o en atención.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <div class="help-number">
+                        6
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Administración
+                        </h3>
+
+                        <p>
+                            Esta sección es únicamente para
+                            el personal autorizado.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="help-footer">
+
+                <button
+                    type="button"
+                    class="help-understood"
+                    id="understoodHelpButton">
+
+                    Entendido
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MODAL ADMINISTRACIÓN
+    ========================== -->
+
     <div
         class="modal"
         id="adminModal">
 
+
         <div class="modal-content">
 
+
             <button
+                type="button"
                 class="close-button"
                 id="closeAdminButton">
+
                 ×
+
             </button>
 
 
             <!-- LOGIN -->
+
             <section id="loginSection">
 
                 <h2 class="modal-title">
@@ -324,6 +438,7 @@
 
 
                 <div class="login-box">
+
 
                     <div class="form-group">
 
@@ -356,39 +471,48 @@
 
 
                     <button
+                        type="button"
                         class="primary-button"
                         id="loginButton">
+
                         Ingresar
+
                     </button>
 
 
                     <div
                         class="error-message"
                         id="loginError">
+
                         Usuario o contraseña incorrectos.
+
                     </div>
+
 
                 </div>
 
             </section>
 
 
-            <!-- PANEL ADMINISTRADOR -->
+            <!-- PANEL ADMINISTRACIÓN -->
+
             <section
                 class="admin-panel"
                 id="adminPanel">
 
+
                 <h2 class="modal-title">
                     Panel de administración
                 </h2>
+
 
                 <p class="modal-subtitle">
                     Control de turnos y usuarios.
                 </p>
 
 
-                <!-- TURNO ACTUAL -->
                 <div class="admin-top">
+
 
                     <div class="admin-current">
 
@@ -396,10 +520,13 @@
                             TURNO ACTUAL
                         </div>
 
+
                         <div
                             class="admin-current-number"
                             id="adminCurrentTurn">
+
                             ---
+
                         </div>
 
                     </div>
@@ -407,19 +534,34 @@
 
                     <div class="admin-buttons">
 
-                        <button id="nextTurnButton">
-                            Llamar siguiente
-                        </button>
-
-                        <button id="repeatTurnButton">
-                            Repetir turno
-                        </button>
 
                         <button
+                            type="button"
+                            id="nextTurnButton">
+
+                            Llamar siguiente
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="repeatTurnButton">
+
+                            Repetir turno
+
+                        </button>
+
+
+                        <button
+                            type="button"
                             class="secondary"
                             id="newDayButton">
+
                             Nueva jornada
+
                         </button>
+
 
                     </div>
 
@@ -427,11 +569,13 @@
 
 
                 <!-- TURNO ESPECÍFICO -->
+
                 <div class="admin-section">
 
                     <h3>
                         Llamar un turno específico
                     </h3>
+
 
                     <div class="specific-turn">
 
@@ -442,8 +586,13 @@
                             max="25"
                             placeholder="Número del turno">
 
-                        <button id="specificTurnButton">
+
+                        <button
+                            type="button"
+                            id="specificTurnButton">
+
                             Llamar
+
                         </button>
 
                     </div>
@@ -452,11 +601,13 @@
 
 
                 <!-- TURNOS ENTREGADOS -->
+
                 <div class="admin-section">
 
                     <h3>
                         Turnos entregados
                     </h3>
+
 
                     <div
                         class="delivered-list"
@@ -467,27 +618,37 @@
 
 
                 <!-- USUARIOS -->
+
                 <div class="admin-section">
 
                     <h3>
                         Usuarios y contraseñas
                     </h3>
 
+
                     <div class="add-user-form">
+
 
                         <input
                             type="text"
                             id="newUsername"
                             placeholder="Nuevo usuario">
 
+
                         <input
                             type="password"
                             id="newPassword"
                             placeholder="Nueva contraseña">
 
-                        <button id="addUserButton">
+
+                        <button
+                            type="button"
+                            id="addUserButton">
+
                             Agregar
+
                         </button>
+
 
                     </div>
 
@@ -497,25 +658,28 @@
                         id="usersList">
                     </div>
 
+
                 </div>
 
 
                 <!-- CERRAR SESIÓN -->
+
                 <button
+                    type="button"
                     class="logout-button"
                     id="logoutButton">
+
                     Cerrar sesión
+
                 </button>
 
+
             </section>
+
 
         </div>
 
     </div>
-
-
-    <!-- JAVASCRIPT -->
-    <script src="script.js"></script>
 
 </body>
 </html>
