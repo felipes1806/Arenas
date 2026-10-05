@@ -1,166 +1,141 @@
-/* =========================================================
+/* =========================================
    CONFIGURACIÓN
-========================================================= */
+========================================= */
 
 const STORAGE_KEY = "turnero_manual_v4";
-
 const USERS_STORAGE_KEY = "turnero_users_v1";
 
 
-/* =========================================================
+/* =========================================
    ESTADO INICIAL
-========================================================= */
+========================================= */
 
-const defaultState = {
+let state = JSON.parse(
+    localStorage.getItem(STORAGE_KEY)
+) || {
     current: null,
     called: [],
     delivered: []
 };
 
 
-/* =========================================================
-   CARGAR ESTADO
-========================================================= */
-
-function loadState() {
-
-    try {
-
-        const saved =
-            localStorage.getItem(STORAGE_KEY);
-
-
-        if (!saved) {
-
-            return {
-                ...defaultState
-            };
-
-        }
-
-
-        const parsed =
-            JSON.parse(saved);
-
-
-        return {
-
-            current:
-                parsed.current ?? null,
-
-            called:
-                Array.isArray(parsed.called)
-                    ? parsed.called
-                    : [],
-
-            delivered:
-                Array.isArray(parsed.delivered)
-                    ? parsed.delivered
-                    : []
-
-        };
-
-
-    } catch (error) {
-
-        return {
-            ...defaultState
-        };
-
+let users = JSON.parse(
+    localStorage.getItem(USERS_STORAGE_KEY)
+) || [
+    {
+        username: "admin",
+        password: "admin123"
     }
-
-}
-
-
-let state = loadState();
+];
 
 
-/* =========================================================
+/* =========================================
+   ELEMENTOS PRINCIPALES
+========================================= */
+
+const currentTurn = document.getElementById("currentTurn");
+const currentMessage = document.getElementById("currentMessage");
+
+const availableCount = document.getElementById("availableCount");
+const lastCalled = document.getElementById("lastCalled");
+const deliveredCount = document.getElementById("deliveredCount");
+
+const turnGrid = document.getElementById("turnGrid");
+const currentDate = document.getElementById("currentDate");
+
+
+/* =========================================
+   ADMIN
+========================================= */
+
+const adminModal = document.getElementById("adminModal");
+
+const openAdminButton =
+    document.getElementById("openAdminButton");
+
+const closeAdminButton =
+    document.getElementById("closeAdminButton");
+
+const loginSection =
+    document.getElementById("loginSection");
+
+const adminPanel =
+    document.getElementById("adminPanel");
+
+const loginUsername =
+    document.getElementById("loginUsername");
+
+const loginPassword =
+    document.getElementById("loginPassword");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginError =
+    document.getElementById("loginError");
+
+const adminCurrentTurn =
+    document.getElementById("adminCurrentTurn");
+
+const nextTurnButton =
+    document.getElementById("nextTurnButton");
+
+const repeatTurnButton =
+    document.getElementById("repeatTurnButton");
+
+const newDayButton =
+    document.getElementById("newDayButton");
+
+const specificTurn =
+    document.getElementById("specificTurn");
+
+const specificTurnButton =
+    document.getElementById("specificTurnButton");
+
+const deliveredList =
+    document.getElementById("deliveredList");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+
+/* =========================================
    USUARIOS
-========================================================= */
+========================================= */
 
-function loadUsers() {
+const newUsername =
+    document.getElementById("newUsername");
 
-    try {
+const newPassword =
+    document.getElementById("newPassword");
 
-        const saved =
-            localStorage.getItem(
-                USERS_STORAGE_KEY
-            );
+const addUserButton =
+    document.getElementById("addUserButton");
 
-
-        if (!saved) {
-
-            const defaultUsers = [
-                {
-                    username: "admin",
-                    password: "admin123"
-                }
-            ];
+const usersList =
+    document.getElementById("usersList");
 
 
-            localStorage.setItem(
-                USERS_STORAGE_KEY,
-                JSON.stringify(defaultUsers)
-            );
+/* =========================================
+   AYUDA
+========================================= */
+
+const helpMenu =
+    document.getElementById("helpMenu");
+
+const openHelpButton =
+    document.getElementById("openHelpButton");
+
+const closeHelpButton =
+    document.getElementById("closeHelpButton");
+
+const understoodHelpButton =
+    document.getElementById("understoodHelpButton");
 
 
-            return defaultUsers;
-
-        }
-
-
-        const users =
-            JSON.parse(saved);
-
-
-        if (
-            !Array.isArray(users) ||
-            users.length === 0
-        ) {
-
-            const defaultUsers = [
-                {
-                    username: "admin",
-                    password: "admin123"
-                }
-            ];
-
-
-            localStorage.setItem(
-                USERS_STORAGE_KEY,
-                JSON.stringify(defaultUsers)
-            );
-
-
-            return defaultUsers;
-
-        }
-
-
-        return users;
-
-
-    } catch (error) {
-
-        return [
-            {
-                username: "admin",
-                password: "admin123"
-            }
-        ];
-
-    }
-
-}
-
-
-let users = loadUsers();
-
-
-/* =========================================================
-   GUARDAR ESTADO
-========================================================= */
+/* =========================================
+   FUNCIONES GENERALES
+========================================= */
 
 function saveState() {
 
@@ -169,232 +144,144 @@ function saveState() {
         JSON.stringify(state)
     );
 
+}
 
-    render();
+
+function saveUsers() {
+
+    localStorage.setItem(
+        USERS_STORAGE_KEY,
+        JSON.stringify(users)
+    );
 
 }
 
 
-/* =========================================================
-   FORMATO DEL TURNO
-========================================================= */
-
 function formatTurn(number) {
-
-    if (
-        number === null ||
-        number === undefined
-    ) {
-
-        return "---";
-
-    }
-
 
     return String(number).padStart(3, "0");
 
 }
 
 
-/* =========================================================
-   MOSTRAR LOS 25 TURNOS
-========================================================= */
+/* =========================================
+   RENDERIZAR TURNOS
+========================================= */
 
 function renderTurnGrid() {
 
-    const grid =
-        document.getElementById("turnGrid");
+    turnGrid.innerHTML = "";
 
+    for (let number = 1; number <= 25; number++) {
 
-    grid.innerHTML = "";
-
-
-    for (let i = 1; i <= 25; i++) {
-
-
-        const card =
-            document.createElement("div");
-
+        const card = document.createElement("div");
 
         card.className = "turn-card";
 
-
-        /* TURNO ACTUAL */
-
-        if (
-            state.current === i
-        ) {
+        if (state.current === number) {
 
             card.classList.add("current");
 
-        }
-
-
-        /* TURNO LLAMADO */
-
-        else if (
-            state.called.includes(i)
-        ) {
+        } else if (state.called.includes(number)) {
 
             card.classList.add("called");
 
-        }
-
-
-        /* TURNO ENTREGADO */
-
-        else if (
-            state.delivered.includes(i)
-        ) {
+        } else if (state.delivered.includes(number)) {
 
             card.classList.add("delivered");
 
         }
 
 
-        let status =
-            "Disponible";
+        const numberElement =
+            document.createElement("div");
+
+        numberElement.className = "turn-number";
+
+        numberElement.textContent =
+            formatTurn(number);
 
 
-        if (
-            state.current === i
-        ) {
+        const statusElement =
+            document.createElement("div");
 
-            status =
+        statusElement.className = "turn-status";
+
+
+        if (state.current === number) {
+
+            statusElement.textContent =
                 "En atención";
 
-        }
+        } else if (state.called.includes(number)) {
 
-
-        else if (
-            state.called.includes(i)
-        ) {
-
-            status =
+            statusElement.textContent =
                 "Llamado";
 
-        }
+        } else if (state.delivered.includes(number)) {
 
-
-        else if (
-            state.delivered.includes(i)
-        ) {
-
-            status =
+            statusElement.textContent =
                 "Entregado";
 
+        } else {
+
+            statusElement.textContent =
+                "Disponible";
+
         }
 
 
-        card.innerHTML = `
+        card.appendChild(numberElement);
 
-            <div class="turn-number">
+        card.appendChild(statusElement);
 
-                ${formatTurn(i)}
-
-            </div>
-
-
-            <div class="turn-status">
-
-                ${status}
-
-            </div>
-
-        `;
-
-
-        grid.appendChild(card);
+        turnGrid.appendChild(card);
 
     }
 
 }
 
 
-/* =========================================================
-   ACTUALIZAR PANTALLA
-========================================================= */
+/* =========================================
+   RENDERIZAR TODO
+========================================= */
 
 function render() {
 
-
-    const currentTurn =
-        document.getElementById(
-            "currentTurn"
-        );
-
-
-    const currentMessage =
-        document.getElementById(
-            "currentMessage"
-        );
-
-
-    const lastCalled =
-        document.getElementById(
-            "lastCalled"
-        );
-
-
-    const availableCount =
-        document.getElementById(
-            "availableCount"
-        );
-
-
-    const deliveredCount =
-        document.getElementById(
-            "deliveredCount"
-        );
-
-
-    const adminCurrentTurn =
-        document.getElementById(
-            "adminCurrentTurn"
-        );
-
-
-    /* TURNO ACTUAL */
-
-    currentTurn.textContent =
-        formatTurn(state.current);
-
-
-    adminCurrentTurn.textContent =
-        formatTurn(state.current);
-
-
     if (state.current) {
 
+        currentTurn.textContent =
+            formatTurn(state.current);
+
+        adminCurrentTurn.textContent =
+            formatTurn(state.current);
+
         currentMessage.textContent =
-            "Por favor, acérquese al punto de atención.";
+            "Diríjase al punto de atención.";
+
+    } else {
+
+        currentTurn.textContent =
+            "---";
+
+        adminCurrentTurn.textContent =
+            "---";
+
+        currentMessage.textContent =
+            "Esperando el inicio de la jornada.";
 
     }
 
-    else {
-
-        currentMessage.textContent =
-            "Esperando el inicio de la jornada";
-
-    }
-
-
-    /* ÚLTIMO LLAMADO */
 
     if (state.called.length > 0) {
 
         const last =
-            state.called[
-                state.called.length - 1
-            ];
-
+            state.called[state.called.length - 1];
 
         lastCalled.textContent =
             formatTurn(last);
 
-    }
-
-    else {
+    } else {
 
         lastCalled.textContent =
             "---";
@@ -402,18 +289,9 @@ function render() {
     }
 
 
-    /* DISPONIBLES */
-
-    const available =
-        25 -
-        state.called.length;
-
-
     availableCount.textContent =
-        Math.max(0, available);
+        25 - state.called.length;
 
-
-    /* ENTREGADOS */
 
     deliveredCount.textContent =
         state.delivered.length;
@@ -421,35 +299,28 @@ function render() {
 
     renderTurnGrid();
 
-    renderDeliveredList();
+    renderDelivered();
+
+    renderUsers();
 
 }
 
 
-/* =========================================================
+/* =========================================
    LLAMAR TURNO
-========================================================= */
+========================================= */
 
 function callTurn(number) {
 
-
-    if (
-        number < 1 ||
-        number > 25
-    ) {
-
+    if (number < 1 || number > 25) {
         return;
-
     }
 
 
-    state.current =
-        number;
+    state.current = number;
 
 
-    if (
-        !state.called.includes(number)
-    ) {
+    if (!state.called.includes(number)) {
 
         state.called.push(number);
 
@@ -458,34 +329,27 @@ function callTurn(number) {
 
     saveState();
 
+    render();
 
     announceTurn(number);
 
 }
 
 
-/* =========================================================
+/* =========================================
    LLAMAR SIGUIENTE
-========================================================= */
+========================================= */
 
 function callNext() {
-
 
     let next = null;
 
 
-    for (
-        let i = 1;
-        i <= 25;
-        i++
-    ) {
+    for (let number = 1; number <= 25; number++) {
 
+        if (!state.called.includes(number)) {
 
-        if (
-            !state.called.includes(i)
-        ) {
-
-            next = i;
+            next = number;
 
             break;
 
@@ -497,7 +361,7 @@ function callNext() {
     if (!next) {
 
         alert(
-            "Ya se han llamado todos los turnos."
+            "Todos los turnos ya fueron llamados."
         );
 
         return;
@@ -510,12 +374,11 @@ function callNext() {
 }
 
 
-/* =========================================================
+/* =========================================
    REPETIR TURNO
-========================================================= */
+========================================= */
 
 function repeatCurrent() {
-
 
     if (!state.current) {
 
@@ -528,28 +391,19 @@ function repeatCurrent() {
     }
 
 
-    announceTurn(
-        state.current
-    );
+    announceTurn(state.current);
 
 }
 
 
-/* =========================================================
+/* =========================================
    TURNO ESPECÍFICO
-========================================================= */
+========================================= */
 
 function callSpecific() {
 
-
-    const input =
-        document.getElementById(
-            "specificTurn"
-        );
-
-
     const number =
-        Number(input.value);
+        Number(specificTurn.value);
 
 
     if (
@@ -559,7 +413,7 @@ function callSpecific() {
     ) {
 
         alert(
-            "Ingrese un turno válido entre 1 y 25."
+            "Ingrese un número de turno entre 1 y 25."
         );
 
         return;
@@ -569,140 +423,93 @@ function callSpecific() {
 
     callTurn(number);
 
-
-    input.value = "";
+    specificTurn.value = "";
 
 }
 
 
-/* =========================================================
-   VOZ
-========================================================= */
+/* =========================================
+   ANUNCIO POR VOZ
+========================================= */
 
 function announceTurn(number) {
 
-
     if (
-        !("speechSynthesis" in window)
+        "speechSynthesis" in window
     ) {
 
-        return;
+        window.speechSynthesis.cancel();
+
+
+        const text =
+            `Turno ${number}. Diríjase al punto de atención.`;
+
+
+        const speech =
+            new SpeechSynthesisUtterance(text);
+
+
+        speech.lang = "es-CO";
+
+        speech.rate = 0.9;
+
+        speech.pitch = 1;
+
+
+        window.speechSynthesis.speak(
+            speech
+        );
 
     }
-
-
-    window.speechSynthesis.cancel();
-
-
-    const text =
-        `Turno ${formatTurn(number)}. ` +
-        `Por favor, acérquese al punto de atención.`;
-
-
-    const speech =
-        new SpeechSynthesisUtterance(text);
-
-
-    speech.lang = "es-CO";
-
-    speech.rate = 0.9;
-
-    speech.pitch = 1;
-
-
-    window.speechSynthesis.speak(
-        speech
-    );
 
 }
 
 
-/* =========================================================
+/* =========================================
    NUEVA JORNADA
-========================================================= */
+========================================= */
 
 function newDay() {
 
-
     const confirmation =
         confirm(
-            "¿Está seguro de iniciar una nueva jornada? Se reiniciarán los turnos."
+            "¿Está seguro de iniciar una nueva jornada? Se reiniciarán todos los turnos."
         );
 
 
     if (!confirmation) {
-
         return;
-
     }
 
 
     state = {
-
         current: null,
-
         called: [],
-
         delivered: []
-
     };
 
 
     saveState();
 
+    render();
+
 }
 
 
-/* =========================================================
-   LISTA DE TURNOS ENTREGADOS
-========================================================= */
+/* =========================================
+   TURNOS ENTREGADOS
+========================================= */
 
-function renderDeliveredList() {
+function renderDelivered() {
 
-
-    const list =
-        document.getElementById(
-            "deliveredList"
-        );
+    deliveredList.innerHTML = "";
 
 
-    list.innerHTML = "";
-
-
-    if (
-        state.delivered.length === 0
+    for (
+        let number = 1;
+        number <= 25;
+        number++
     ) {
-
-        list.innerHTML = `
-
-            <div
-                style="
-                    grid-column: 1 / -1;
-                    text-align: center;
-                    padding: 15px;
-                    color: #806c55;
-                ">
-
-                No hay turnos marcados como entregados.
-
-            </div>
-
-        `;
-
-
-        return;
-
-    }
-
-
-    const sorted =
-        [...state.delivered].sort(
-            (a, b) => a - b
-        );
-
-
-    sorted.forEach(number => {
-
 
         const item =
             document.createElement("div");
@@ -712,46 +519,54 @@ function renderDeliveredList() {
             "delivered-item";
 
 
-        const isCalled =
-            state.called.includes(number);
+        const label =
+            document.createElement("span");
 
 
-        item.innerHTML = `
-
-            <strong>
-
-                Turno ${formatTurn(number)}
-
-            </strong>
+        label.textContent =
+            `Turno ${formatTurn(number)}`;
 
 
-            <button
-                onclick="toggleDelivered(${number})">
-
-                ${
-                    isCalled
-                        ? "Entregado"
-                        : "Marcar"
-                }
-
-            </button>
-
-        `;
+        const button =
+            document.createElement("button");
 
 
-        list.appendChild(item);
+        const delivered =
+            state.delivered.includes(number);
 
-    });
+
+        button.textContent =
+            delivered
+                ? "Quitar"
+                : "Entregar";
+
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                toggleDelivered(number);
+
+            }
+        );
+
+
+        item.appendChild(label);
+
+        item.appendChild(button);
+
+        deliveredList.appendChild(item);
+
+    }
 
 }
 
 
-/* =========================================================
-   MARCAR ENTREGADO
-========================================================= */
+/* =========================================
+   CAMBIAR ESTADO DE ENTREGA
+========================================= */
 
 function toggleDelivered(number) {
-
 
     const index =
         state.delivered.indexOf(number);
@@ -761,9 +576,7 @@ function toggleDelivered(number) {
 
         state.delivered.push(number);
 
-    }
-
-    else {
+    } else {
 
         state.delivered.splice(
             index,
@@ -775,162 +588,96 @@ function toggleDelivered(number) {
 
     saveState();
 
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-function login() {
-
-
-    const username =
-        document.getElementById(
-            "loginUsername"
-        ).value.trim();
-
-
-    const password =
-        document.getElementById(
-            "loginPassword"
-        ).value;
-
-
-    const user =
-        users.find(
-            item =>
-                item.username === username &&
-                item.password === password
-        );
-
-
-    const error =
-        document.getElementById(
-            "loginError"
-        );
-
-
-    if (!user) {
-
-        error.style.display =
-            "block";
-
-        return;
-
-    }
-
-
-    error.style.display =
-        "none";
-
-
-    document.getElementById(
-        "loginSection"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "adminPanel"
-    ).classList.add("active");
-
-
-    renderUsers();
-
     render();
 
 }
 
 
-/* =========================================================
-   CERRAR SESIÓN
-========================================================= */
+/* =========================================
+   LOGIN
+========================================= */
 
-function logout() {
+function login() {
 
+    const username =
+        loginUsername.value.trim();
 
-    document.getElementById(
-        "adminPanel"
-    ).classList.remove("active");
-
-
-    document.getElementById(
-        "loginSection"
-    ).style.display =
-        "block";
+    const password =
+        loginPassword.value;
 
 
-    document.getElementById(
-        "loginUsername"
-    ).value = "";
+    const validUser =
+        users.find(
+            user =>
+                user.username === username &&
+                user.password === password
+        );
 
 
-    document.getElementById(
-        "loginPassword"
-    ).value = "";
+    if (!validUser) {
+
+        loginError.classList.add("show");
+
+        return;
+
+    }
 
 
-    document.getElementById(
-        "loginError"
-    ).style.display =
+    loginError.classList.remove("show");
+
+    loginSection.style.display =
         "none";
+
+    adminPanel.classList.add("active");
+
+    loginUsername.value = "";
+
+    loginPassword.value = "";
 
 }
 
 
-/* =========================================================
+/* =========================================
+   CERRAR SESIÓN
+========================================= */
+
+function logout() {
+
+    adminPanel.classList.remove(
+        "active"
+    );
+
+    loginSection.style.display =
+        "block";
+
+    loginUsername.value = "";
+
+    loginPassword.value = "";
+
+    loginError.classList.remove(
+        "show"
+    );
+
+}
+
+
+/* =========================================
    AGREGAR USUARIO
-========================================================= */
+========================================= */
 
 function addUser() {
 
-
     const username =
-        document.getElementById(
-            "newUsername"
-        ).value.trim();
-
+        newUsername.value.trim();
 
     const password =
-        document.getElementById(
-            "newPassword"
-        ).value;
+        newPassword.value;
 
 
-    if (
-        !username ||
-        !password
-    ) {
+    if (!username || !password) {
 
         alert(
             "Ingrese usuario y contraseña."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        username.length < 3
-    ) {
-
-        alert(
-            "El usuario debe tener al menos 3 caracteres."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        password.length < 4
-    ) {
-
-        alert(
-            "La contraseña debe tener al menos 4 caracteres."
         );
 
         return;
@@ -958,28 +705,19 @@ function addUser() {
 
 
     users.push({
-
         username: username,
-
         password: password
-
     });
 
 
     saveUsers();
 
-
-    document.getElementById(
-        "newUsername"
-    ).value = "";
-
-
-    document.getElementById(
-        "newPassword"
-    ).value = "";
-
-
     renderUsers();
+
+
+    newUsername.value = "";
+
+    newPassword.value = "";
 
 
     alert(
@@ -989,87 +727,61 @@ function addUser() {
 }
 
 
-/* =========================================================
-   GUARDAR USUARIOS
-========================================================= */
-
-function saveUsers() {
-
-    localStorage.setItem(
-
-        USERS_STORAGE_KEY,
-
-        JSON.stringify(users)
-
-    );
-
-}
-
-
-/* =========================================================
+/* =========================================
    MOSTRAR USUARIOS
-========================================================= */
+========================================= */
 
 function renderUsers() {
 
-
-    const list =
-        document.getElementById(
-            "usersList"
-        );
-
-
-    list.innerHTML = "";
+    usersList.innerHTML = "";
 
 
     users.forEach(
         (user, index) => {
 
-
             const item =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             item.className =
                 "user-item";
 
 
-            item.innerHTML = `
-
-                <div>
-
-                    <span class="user-name">
-
-                        ${escapeHtml(
-                            user.username
-                        )}
-
-                    </span>
+            const name =
+                document.createElement("span");
 
 
-                    <span class="user-role">
-
-                        Administrador
-
-                    </span>
-
-                </div>
+            name.textContent =
+                user.username;
 
 
-                <button
-                    class="delete-user"
-                    onclick="deleteUser(${index})">
-
-                    Eliminar
-
-                </button>
-
-            `;
+            const deleteButton =
+                document.createElement("button");
 
 
-            list.appendChild(item);
+            deleteButton.className =
+                "user-delete";
+
+
+            deleteButton.textContent =
+                "Eliminar";
+
+
+            deleteButton.addEventListener(
+                "click",
+                function () {
+
+                    deleteUser(index);
+
+                }
+            );
+
+
+            item.appendChild(name);
+
+            item.appendChild(deleteButton);
+
+            usersList.appendChild(item);
 
         }
     );
@@ -1077,48 +789,35 @@ function renderUsers() {
 }
 
 
-/* =========================================================
+/* =========================================
    ELIMINAR USUARIO
-========================================================= */
+========================================= */
 
 function deleteUser(index) {
 
-
-    if (
-        users.length <= 1
-    ) {
+    if (users.length <= 1) {
 
         alert(
-            "Debe existir al menos un usuario administrador."
+            "Debe existir al menos un usuario."
         );
 
         return;
 
     }
-
-
-    const user =
-        users[index];
 
 
     const confirmation =
         confirm(
-            `¿Desea eliminar al usuario "${user.username}"?`
+            "¿Desea eliminar este usuario?"
         );
 
 
     if (!confirmation) {
-
         return;
-
     }
 
 
-    users.splice(
-        index,
-        1
-    );
-
+    users.splice(index, 1);
 
     saveUsers();
 
@@ -1127,230 +826,242 @@ function deleteUser(index) {
 }
 
 
-/* =========================================================
-   SEGURIDAD HTML
-========================================================= */
-
-function escapeHtml(text) {
-
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================================
-   FECHA
-========================================================= */
+/* =========================================
+   FECHA ACTUAL
+========================================= */
 
 function updateDate() {
 
-
-    const date =
+    const now =
         new Date();
 
 
-    const options = {
-
-        day: "2-digit",
-
-        month: "2-digit",
-
-        year: "numeric"
-
-    };
-
-
-    document.getElementById(
-        "currentDate"
-    ).textContent =
-
-        date.toLocaleDateString(
+    currentDate.textContent =
+        now.toLocaleDateString(
             "es-CO",
-            options
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }
         );
 
 }
 
 
-/* =========================================================
-   EVENTOS
-========================================================= */
+/* =========================================
+   MENÚ DE AYUDA
+========================================= */
+
+function openHelp() {
+
+    helpMenu.classList.add(
+        "active"
+    );
+
+}
 
 
-/* Abrir administración */
+function closeHelp() {
 
-document
-    .getElementById("openAdminButton")
-    .addEventListener(
-        "click",
-        function () {
+    helpMenu.classList.remove(
+        "active"
+    );
 
-            document
-                .getElementById("adminModal")
-                .classList.add("active");
+}
 
 
-            document
-                .getElementById("loginSection")
-                .style.display = "block";
+/* =========================================
+   EVENTOS AYUDA
+========================================= */
+
+openHelpButton.addEventListener(
+    "click",
+    openHelp
+);
 
 
-            document
-                .getElementById("adminPanel")
-                .classList.remove("active");
+closeHelpButton.addEventListener(
+    "click",
+    closeHelp
+);
 
 
-            document
-                .getElementById("loginUsername")
-                .focus();
+understoodHelpButton.addEventListener(
+    "click",
+    closeHelp
+);
+
+
+helpMenu.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target === helpMenu
+        ) {
+
+            closeHelp();
 
         }
-    );
+
+    }
+);
 
 
-/* Cerrar administración */
+/* =========================================
+   EVENTOS ADMINISTRACIÓN
+========================================= */
 
-document
-    .getElementById("closeAdminButton")
-    .addEventListener(
-        "click",
-        function () {
+openAdminButton.addEventListener(
+    "click",
+    function () {
 
-            document
-                .getElementById("adminModal")
-                .classList.remove("active");
+        adminModal.classList.add(
+            "active"
+        );
 
-        }
-    );
+        loginSection.style.display =
+            "block";
 
+        adminPanel.classList.remove(
+            "active"
+        );
 
-/* Login */
-
-document
-    .getElementById("loginButton")
-    .addEventListener(
-        "click",
-        login
-    );
+    }
+);
 
 
-/* Llamar siguiente */
+closeAdminButton.addEventListener(
+    "click",
+    function () {
 
-document
-    .getElementById("nextTurnButton")
-    .addEventListener(
-        "click",
-        callNext
-    );
+        adminModal.classList.remove(
+            "active"
+        );
 
+        logout();
 
-/* Repetir */
-
-document
-    .getElementById("repeatTurnButton")
-    .addEventListener(
-        "click",
-        repeatCurrent
-    );
+    }
+);
 
 
-/* Nueva jornada */
+adminModal.addEventListener(
+    "click",
+    function (event) {
 
-document
-    .getElementById("newDayButton")
-    .addEventListener(
-        "click",
-        newDay
-    );
+        if (
+            event.target === adminModal
+        ) {
 
+            adminModal.classList.remove(
+                "active"
+            );
 
-/* Turno específico */
-
-document
-    .getElementById("specificTurnButton")
-    .addEventListener(
-        "click",
-        callSpecific
-    );
-
-
-/* Agregar usuario */
-
-document
-    .getElementById("addUserButton")
-    .addEventListener(
-        "click",
-        addUser
-    );
-
-
-/* Cerrar sesión */
-
-document
-    .getElementById("logoutButton")
-    .addEventListener(
-        "click",
-        logout
-    );
-
-
-/* ENTER en login */
-
-document
-    .getElementById("loginPassword")
-    .addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                login();
-
-            }
+            logout();
 
         }
-    );
+
+    }
+);
 
 
-/* Cerrar modal haciendo clic afuera */
+loginButton.addEventListener(
+    "click",
+    login
+);
 
-document
-    .getElementById("adminModal")
-    .addEventListener(
-        "click",
-        function (event) {
 
-            if (
-                event.target === this
-            ) {
+loginPassword.addEventListener(
+    "keydown",
+    function (event) {
 
-                this.classList.remove(
-                    "active"
-                );
+        if (event.key === "Enter") {
 
-            }
+            login();
 
         }
-    );
+
+    }
+);
 
 
-/* =========================================================
-   INICIAR
-========================================================= */
+nextTurnButton.addEventListener(
+    "click",
+    callNext
+);
+
+
+repeatTurnButton.addEventListener(
+    "click",
+    repeatCurrent
+);
+
+
+newDayButton.addEventListener(
+    "click",
+    newDay
+);
+
+
+specificTurnButton.addEventListener(
+    "click",
+    callSpecific
+);
+
+
+specificTurn.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+
+            callSpecific();
+
+        }
+
+    }
+);
+
+
+logoutButton.addEventListener(
+    "click",
+    logout
+);
+
+
+addUserButton.addEventListener(
+    "click",
+    addUser
+);
+
+
+/* =========================================
+   INICIO
+========================================= */
 
 updateDate();
 
 render();
+
+
+/*
+    El menú de ayuda se abre automáticamente
+    cada vez que se carga la página.
+*/
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        setTimeout(
+            function () {
+
+                openHelp();
+
+            },
+            300
+        );
+
+    }
+);
