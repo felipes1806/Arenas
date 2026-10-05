@@ -1,7 +1,3 @@
-/* =========================================================
-   CONFIGURACIÓN GENERAL
-========================================================= */
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -11,11 +7,8 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-
     background: #f5efe5;
-
     color: #3f3428;
-
     min-height: 100vh;
 }
 
@@ -31,81 +24,86 @@ button {
 }
 
 
-/* =========================================================
+/* =========================
    ENCABEZADO
-========================================================= */
+========================= */
 
 .header {
     background: #d9c2a3;
+    border-bottom: 1px solid #b99a73;
+    padding: 28px 20px;
+}
 
-    border-bottom: 3px solid #b99a73;
 
-    padding: 25px 20px;
-
+.header-content {
+    max-width: 1200px;
+    margin: auto;
     text-align: center;
 }
 
 
-.header-content h1 {
+.header h1 {
     font-size: 30px;
-
     letter-spacing: 1px;
-
-    color: #3b3025;
-
-    margin-bottom: 8px;
+    color: #443526;
+    margin-bottom: 7px;
 }
 
 
-.header-content p {
-    font-size: 16px;
-
-    color: #5d4c39;
+.header p {
+    font-size: 15px;
+    color: #695642;
 }
 
 
-/* =========================================================
+/* =========================
    CONTENEDOR
-========================================================= */
+========================= */
 
 .container {
     width: 100%;
-
     max-width: 1200px;
-
-    margin: 0 auto;
-
-    padding: 25px;
+    margin: auto;
+    padding: 25px 20px 40px;
 }
 
 
-/* =========================================================
-   ADMINISTRACIÓN
-========================================================= */
+/* =========================
+   BOTONES SUPERIORES
+========================= */
 
-.admin-button-container {
+.top-buttons {
     display: flex;
-
     justify-content: flex-end;
-
+    align-items: center;
+    gap: 10px;
     margin-bottom: 20px;
+}
+
+
+.help-button,
+.admin-button {
+    border: none;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 7px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+
+.help-button {
+    background: #a58c6b;
+}
+
+
+.help-button:hover {
+    background: #806b4f;
 }
 
 
 .admin-button {
     background: #6f5a43;
-
-    color: white;
-
-    border: none;
-
-    padding: 11px 18px;
-
-    border-radius: 7px;
-
-    font-size: 14px;
-
-    transition: 0.2s;
 }
 
 
@@ -114,249 +112,425 @@ button {
 }
 
 
-/* =========================================================
+/* =========================
    TURNO ACTUAL
-========================================================= */
+========================= */
 
 .current-turn-card {
     background: #fffaf3;
-
-    border: 2px solid #d8c5aa;
-
-    border-radius: 15px;
-
-    padding: 35px 20px;
-
+    border: 1px solid #e1d3c1;
+    border-radius: 14px;
+    padding: 30px;
     text-align: center;
-
-    box-shadow:
-        0 5px 18px rgba(80, 60, 40, 0.08);
-
-    margin-bottom: 25px;
+    box-shadow: 0 5px 18px rgba(70, 50, 30, 0.07);
 }
 
 
 .current-turn-title {
-    font-size: 17px;
-
+    color: #806c55;
+    font-size: 15px;
     font-weight: bold;
-
-    color: #77644e;
-
     letter-spacing: 1px;
-
-    margin-bottom: 12px;
 }
 
 
 .current-turn-number {
+    color: #554431;
     font-size: 90px;
-
     line-height: 1;
-
     font-weight: bold;
-
-    color: #4e3d2c;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 15px;
+    margin: 18px 0;
 }
 
 
 .current-message {
-    font-size: 17px;
-
-    color: #675643;
+    color: #76634e;
+    font-size: 15px;
 }
 
 
-/* =========================================================
+/* =========================
    INFORMACIÓN
-========================================================= */
+========================= */
 
 .info-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
+    grid-template-columns: repeat(3, 1fr);
     gap: 18px;
-
-    margin-bottom: 30px;
+    margin-top: 20px;
 }
 
 
 .info-card {
     background: #fffaf3;
-
-    border: 1px solid #ddcbb4;
-
-    border-radius: 12px;
-
+    border: 1px solid #e1d3c1;
+    border-radius: 11px;
     padding: 20px;
-
     text-align: center;
 }
 
 
 .info-card-title {
-    color: #806c55;
-
     font-size: 14px;
-
-    margin-bottom: 8px;
+    color: #806c55;
+    margin-bottom: 10px;
 }
 
 
 .info-card-value {
-    color: #4c3b2b;
-
-    font-size: 28px;
-
+    font-size: 30px;
     font-weight: bold;
+    color: #554431;
 }
 
 
-/* =========================================================
+/* =========================
    TURNOS
-========================================================= */
+========================= */
+
+.turn-section {
+    margin-top: 30px;
+}
+
 
 .section-title {
-    text-align: center;
-
-    font-size: 22px;
-
-    color: #4b3b2b;
-
-    margin-bottom: 18px;
+    font-size: 21px;
+    color: #4c3b2b;
+    margin-bottom: 16px;
 }
 
 
 .turn-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(5, 1fr);
-
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
 }
 
 
 .turn-card {
     background: #fffaf3;
-
-    border: 1px solid #d7c4aa;
-
-    border-radius: 10px;
-
-    min-height: 95px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
+    border: 1px solid #dfd1bd;
+    border-radius: 9px;
+    padding: 17px 10px;
+    text-align: center;
     transition: 0.2s;
 }
 
 
-.turn-card:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 4px 12px rgba(70, 50, 30, 0.1);
-}
-
-
 .turn-number {
-    font-size: 24px;
-
+    font-size: 23px;
     font-weight: bold;
-
-    color: #4b3a29;
-
-    margin-bottom: 6px;
+    color: #554431;
+    margin-bottom: 7px;
 }
 
 
 .turn-status {
     font-size: 12px;
-
     color: #806c55;
 }
 
 
-/* TURNO LLAMADO */
-
 .turn-card.called {
     background: #dfd1bd;
-
-    border-color: #bca486;
 }
 
 
-/* TURNO ACTUAL */
-
 .turn-card.current {
     background: #c6ad8d;
-
-    border-color: #947554;
+    border-color: #a78b66;
 }
 
 
 .turn-card.current .turn-number,
 .turn-card.current .turn-status {
-    color: #2f251c;
+    color: #3e3023;
 }
 
-
-/* TURNO ENTREGADO */
 
 .turn-card.delivered {
     background: #eee5d8;
 }
 
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* =========================
+   PIE DE PÁGINA
+========================= */
 
 .footer {
     text-align: center;
-
-    padding: 30px 15px 20px;
-
-    color: #88745c;
-
+    color: #806c55;
     font-size: 13px;
+    padding: 20px;
+    border-top: 1px solid #dfd1bd;
 }
 
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* =========================
+   MENÚ DE AYUDA
+========================= */
 
-.modal {
+.help-overlay {
     position: fixed;
-
     inset: 0;
 
-    background:
-        rgba(40, 30, 20, 0.58);
+    background: rgba(45, 35, 25, 0.62);
 
     display: none;
-
     align-items: center;
-
     justify-content: center;
 
     padding: 20px;
 
-    z-index: 1000;
+    z-index: 2000;
+
+    animation: helpFadeIn 0.25s ease;
+}
+
+
+.help-overlay.active {
+    display: flex;
+}
+
+
+.help-menu {
+    position: relative;
+
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #fffaf3;
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+
+    border: 1px solid #ddcbb4;
+
+    animation: helpSlideIn 0.3s ease;
+}
+
+
+.help-close {
+    position: absolute;
+
+    top: 14px;
+    right: 17px;
+
+    width: 38px;
+    height: 38px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #eee3d4;
+    color: #604d37;
+
+    font-size: 25px;
+    line-height: 1;
+
+    transition: 0.2s;
+}
+
+
+.help-close:hover {
+    background: #dfcfba;
+    transform: rotate(90deg);
+}
+
+
+.help-header {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding-right: 35px;
+
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid #e2d2bd;
+}
+
+
+.help-icon {
+    min-width: 55px;
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #c8b091;
+    color: white;
+
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+.help-header h2 {
+    color: #463728;
+    font-size: 25px;
+    margin-bottom: 6px;
+}
+
+
+.help-header p {
+    color: #806c55;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+.help-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+.help-item {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    background: #f7f0e6;
+
+    border: 1px solid #e4d5c0;
+
+    border-radius: 10px;
+}
+
+
+.help-number {
+    min-width: 34px;
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #80684d;
+
+    color: white;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+.help-item h3 {
+    color: #4e3b29;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+
+.help-item p {
+    color: #705f4b;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+.help-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 25px;
+    padding-top: 18px;
+
+    border-top: 1px solid #e2d2bd;
+}
+
+
+.help-understood {
+    border: none;
+
+    background: #6d5842;
+    color: white;
+
+    padding: 12px 28px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+
+.help-understood:hover {
+    background: #51402f;
+}
+
+
+/* =========================
+   ANIMACIONES AYUDA
+========================= */
+
+@keyframes helpFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes helpSlideIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================
+   MODAL ADMIN
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(45, 35, 25, 0.65);
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 1500;
 }
 
 
@@ -366,151 +540,165 @@ button {
 
 
 .modal-content {
-    background: #fffaf3;
+    position: relative;
 
     width: 100%;
-
-    max-width: 900px;
-
+    max-width: 850px;
     max-height: 92vh;
 
     overflow-y: auto;
 
+    background: #fffaf3;
+
     border-radius: 15px;
 
-    padding: 28px;
+    padding: 30px;
 
-    box-shadow:
-        0 15px 50px rgba(0, 0, 0, 0.25);
+    border: 1px solid #ddcbb4;
 
-    position: relative;
-}
-
-
-.modal-title {
-    font-size: 25px;
-
-    color: #473727;
-
-    margin-bottom: 8px;
-}
-
-
-.modal-subtitle {
-    color: #806c55;
-
-    margin-bottom: 25px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
 
 .close-button {
     position: absolute;
 
-    top: 15px;
+    right: 16px;
+    top: 12px;
 
-    right: 18px;
+    width: 36px;
+    height: 36px;
 
     border: none;
+    border-radius: 50%;
 
-    background: transparent;
+    background: #eee3d4;
 
-    font-size: 28px;
+    color: #604d37;
 
-    color: #77634e;
+    font-size: 24px;
 }
 
 
-/* =========================================================
+.modal-title {
+    font-size: 25px;
+    color: #463728;
+
+    margin-bottom: 7px;
+}
+
+
+.modal-subtitle {
+    color: #806c55;
+    font-size: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================
    LOGIN
-========================================================= */
+========================= */
 
 .login-box {
     max-width: 420px;
+    margin: auto;
 
-    margin: 10px auto;
+    background: #f7f0e6;
+
+    border: 1px solid #e1d2bd;
+
+    border-radius: 12px;
+
+    padding: 25px;
 }
 
 
 .form-group {
-    margin-bottom: 17px;
+    margin-bottom: 18px;
 }
 
 
 .form-group label {
     display: block;
 
-    margin-bottom: 7px;
+    color: #574532;
 
     font-size: 14px;
-
     font-weight: bold;
 
-    color: #5b4936;
+    margin-bottom: 7px;
 }
 
 
-.form-group input {
+.form-group input,
+.specific-turn input,
+.add-user-form input {
     width: 100%;
 
-    padding: 12px 13px;
-
-    border: 1px solid #ccb99e;
-
-    border-radius: 7px;
+    border: 1px solid #ccb99f;
 
     background: white;
 
-    font-size: 15px;
+    border-radius: 7px;
+
+    padding: 11px;
 
     outline: none;
+
+    font-size: 14px;
 }
 
 
-.form-group input:focus {
-    border-color: #947555;
+.form-group input:focus,
+.specific-turn input:focus,
+.add-user-form input:focus {
+    border-color: #927956;
 }
 
 
 .primary-button {
     width: 100%;
 
-    background: #6d5842;
-
-    color: white;
-
     border: none;
 
+    background: #6d5842;
+    color: white;
+
+    padding: 12px;
+
     border-radius: 7px;
-
-    padding: 13px;
-
-    font-size: 15px;
 
     font-weight: bold;
 }
 
 
 .primary-button:hover {
-    background: #53422f;
+    background: #51402f;
 }
 
 
 .error-message {
-    color: #a33f35;
+    display: none;
 
-    font-size: 14px;
+    color: #a3473d;
 
-    margin-top: 12px;
+    font-size: 13px;
 
     text-align: center;
 
-    display: none;
+    margin-top: 12px;
 }
 
 
-/* =========================================================
+.error-message.show {
+    display: block;
+}
+
+
+/* =========================
    PANEL ADMIN
-========================================================= */
+========================= */
 
 .admin-panel {
     display: none;
@@ -523,110 +711,115 @@ button {
 
 
 .admin-top {
-    background: #eadfce;
+    display: grid;
 
-    border: 1px solid #d1bfa5;
+    grid-template-columns: 180px 1fr;
 
-    border-radius: 12px;
+    gap: 20px;
 
-    padding: 20px;
-
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 
 .admin-current {
-    text-align: center;
+    background: #e8dccb;
 
-    margin-bottom: 20px;
+    border: 1px solid #d1bfa5;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    text-align: center;
 }
 
 
 .admin-current-label {
-    font-size: 14px;
+    color: #766047;
 
-    color: #77634d;
+    font-size: 12px;
 
-    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 
 .admin-current-number {
-    font-size: 55px;
+    color: #4d3b29;
+
+    font-size: 42px;
 
     font-weight: bold;
 
-    color: #493827;
+    margin-top: 12px;
 }
 
 
 .admin-buttons {
-    display: grid;
+    display: flex;
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    flex-wrap: wrap;
+
+    align-content: center;
 
     gap: 10px;
 }
 
 
-.admin-buttons button {
+.admin-buttons button,
+.specific-turn button,
+.add-user-form button {
     border: none;
 
-    border-radius: 7px;
-
-    padding: 12px;
-
-    background: #725c44;
+    background: #6d5842;
 
     color: white;
 
-    font-weight: bold;
+    padding: 11px 16px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
 }
 
 
-.admin-buttons button:hover {
-    background: #55432f;
+.admin-buttons button:hover,
+.specific-turn button:hover,
+.add-user-form button:hover {
+    background: #51402f;
 }
 
 
-.admin-buttons .secondary {
-    background: #b69a77;
+.admin-buttons button.secondary {
+    background: #a58c6b;
 }
 
 
-.admin-buttons .secondary:hover {
-    background: #967b5a;
+.admin-buttons button.secondary:hover {
+    background: #806b4f;
 }
 
 
-/* =========================================================
+/* =========================
    SECCIONES ADMIN
-========================================================= */
+========================= */
 
 .admin-section {
-    background: #fffdf9;
+    margin-top: 22px;
 
-    border: 1px solid #dfcdb4;
+    padding-top: 20px;
 
-    border-radius: 12px;
-
-    padding: 20px;
-
-    margin-bottom: 20px;
+    border-top: 1px solid #e2d2bd;
 }
 
 
 .admin-section h3 {
-    color: #4b3928;
+    color: #51402f;
 
-    margin-bottom: 15px;
+    font-size: 16px;
+
+    margin-bottom: 12px;
 }
 
-
-/* =========================================================
-   TURNO ESPECÍFICO
-========================================================= */
 
 .specific-turn {
     display: flex;
@@ -636,136 +829,67 @@ button {
 
 
 .specific-turn input {
-    flex: 1;
-
-    min-width: 0;
-
-    padding: 12px;
-
-    border: 1px solid #ccb99e;
-
-    border-radius: 7px;
+    max-width: 250px;
 }
 
 
-.specific-turn button {
-    border: none;
-
-    background: #6d5842;
-
-    color: white;
-
-    border-radius: 7px;
-
-    padding: 0 18px;
-
-    font-weight: bold;
-}
-
-
-/* =========================================================
+/* =========================
    TURNOS ENTREGADOS
-========================================================= */
+========================= */
 
 .delivered-list {
-    display: grid;
+    display: flex;
 
-    grid-template-columns:
-        repeat(2, 1fr);
+    flex-wrap: wrap;
 
     gap: 8px;
-
-    max-height: 260px;
-
-    overflow-y: auto;
 }
 
 
 .delivered-item {
-    display: flex;
+    background: #eee5d8;
 
-    justify-content: space-between;
+    border: 1px solid #d9c8b1;
 
-    align-items: center;
+    color: #5b4936;
 
-    gap: 8px;
+    padding: 8px 12px;
 
-    padding: 10px;
+    border-radius: 6px;
 
-    background: #f3ecdf;
-
-    border: 1px solid #ddcbb4;
-
-    border-radius: 7px;
-}
-
-
-.delivered-item strong {
-    font-size: 15px;
+    font-size: 13px;
 }
 
 
 .delivered-item button {
     border: none;
 
-    border-radius: 5px;
+    background: transparent;
 
-    padding: 7px 9px;
+    color: #8b493d;
 
-    background: #80684c;
-
-    color: white;
-
-    font-size: 12px;
-}
-
-
-.delivered-item button:hover {
-    background: #624e38;
-}
-
-
-/* =========================================================
-   USUARIOS
-========================================================= */
-
-.add-user-form {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr auto;
-
-    gap: 8px;
-
-    margin-bottom: 15px;
-}
-
-
-.add-user-form input {
-    padding: 11px;
-
-    border: 1px solid #ccb99e;
-
-    border-radius: 7px;
-}
-
-
-.add-user-form button {
-    border: none;
-
-    background: #6d5842;
-
-    color: white;
-
-    padding: 0 18px;
-
-    border-radius: 7px;
+    margin-left: 7px;
 
     font-weight: bold;
 }
 
 
+/* =========================
+   USUARIOS
+========================= */
+
+.add-user-form {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr auto;
+
+    gap: 8px;
+}
+
+
 .users-list {
+    margin-top: 15px;
+
     display: flex;
 
     flex-direction: column;
@@ -778,43 +902,28 @@ button {
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
-    padding: 11px;
+    background: #f7f0e6;
 
-    border: 1px solid #ddcbb4;
-
-    background: #f5eee3;
+    border: 1px solid #e1d2bd;
 
     border-radius: 7px;
+
+    padding: 10px 12px;
+
+    font-size: 14px;
 }
 
 
-.user-name {
-    font-weight: bold;
-
-    color: #4e3c2b;
-}
-
-
-.user-role {
-    font-size: 12px;
-
-    color: #806b53;
-
-    margin-left: 5px;
-}
-
-
-.delete-user {
+.user-delete {
     border: none;
 
-    background: #a45a4e;
+    background: #a3473d;
 
     color: white;
 
-    padding: 7px 10px;
+    padding: 6px 9px;
 
     border-radius: 5px;
 
@@ -822,121 +931,88 @@ button {
 }
 
 
-.delete-user:hover {
-    background: #813d34;
-}
-
-
-/* =========================================================
-   CERRAR SESIÓN
-========================================================= */
-
 .logout-button {
     width: 100%;
 
+    margin-top: 25px;
+
     border: none;
 
-    background: #9b8061;
+    background: #8d443a;
 
     color: white;
 
-    border-radius: 7px;
-
     padding: 12px;
+
+    border-radius: 7px;
 
     font-weight: bold;
 }
 
 
 .logout-button:hover {
-    background: #796246;
+    background: #71342d;
 }
 
 
-/* =========================================================
-   TABLET
-========================================================= */
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 800px) {
 
-
-    .container {
-        padding: 18px;
-    }
-
-
     .turn-grid {
-        grid-template-columns:
-            repeat(4, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
 
-    .info-grid {
-        grid-template-columns:
-            1fr;
+    .admin-top {
+        grid-template-columns: 1fr;
     }
 
 
     .admin-buttons {
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .add-user-form {
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .add-user-form button {
-        padding: 12px;
+        justify-content: center;
     }
 
 }
 
 
-/* =========================================================
-   CELULAR
-========================================================= */
-
-@media (max-width: 550px) {
-
+@media (max-width: 600px) {
 
     .header {
-        padding: 20px 12px;
+        padding: 22px 15px;
     }
 
 
-    .header-content h1 {
+    .header h1 {
         font-size: 23px;
     }
 
 
-    .header-content p {
-        font-size: 14px;
-
-        line-height: 1.4;
+    .header p {
+        font-size: 13px;
     }
 
 
     .container {
-        padding: 14px;
+        padding: 18px 12px 30px;
     }
 
 
-    .admin-button-container {
+    .top-buttons {
         justify-content: center;
-    }
-
-
-    .admin-button {
         width: 100%;
     }
 
 
+    .top-buttons button {
+        flex: 1;
+    }
+
+
     .current-turn-card {
-        padding: 28px 15px;
+        padding: 25px 15px;
     }
 
 
@@ -945,60 +1021,23 @@ button {
     }
 
 
-    .current-message {
-        font-size: 15px;
-
-        line-height: 1.4;
+    .info-grid {
+        grid-template-columns: 1fr;
     }
 
 
     .turn-grid {
-        grid-template-columns:
-            repeat(3, 1fr);
-
-        gap: 8px;
-    }
-
-
-    .turn-card {
-        min-height: 80px;
-    }
-
-
-    .turn-number {
-        font-size: 20px;
-    }
-
-
-    .turn-status {
-        font-size: 10px;
-
-        text-align: center;
-    }
-
-
-    .modal {
-        padding: 10px;
+        grid-template-columns: repeat(3, 1fr);
     }
 
 
     .modal-content {
-        padding: 22px 15px;
-
-        max-height: 95vh;
+        padding: 24px 16px;
     }
 
 
-    .modal-title {
-        font-size: 21px;
-
-        padding-right: 30px;
-    }
-
-
-    .delivered-list {
-        grid-template-columns:
-            1fr;
+    .add-user-form {
+        grid-template-columns: 1fr;
     }
 
 
@@ -1007,33 +1046,97 @@ button {
     }
 
 
-    .specific-turn button {
-        padding: 12px;
+    .specific-turn input {
+        max-width: none;
     }
 
 
-    .admin-current-number {
-        font-size: 45px;
+    /* AYUDA */
+
+    .help-menu {
+        padding: 23px 16px;
+
+        max-height: 94vh;
+
+        border-radius: 14px;
+    }
+
+
+    .help-header {
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .help-icon {
+        min-width: 45px;
+
+        width: 45px;
+        height: 45px;
+
+        font-size: 23px;
+    }
+
+
+    .help-header h2 {
+        font-size: 20px;
+    }
+
+
+    .help-header p {
+        font-size: 13px;
+    }
+
+
+    .help-item {
+        padding: 12px;
+
+        gap: 11px;
+    }
+
+
+    .help-item h3 {
+        font-size: 15px;
+    }
+
+
+    .help-item p {
+        font-size: 13px;
+    }
+
+
+    .help-footer {
+        justify-content: center;
+    }
+
+
+    .help-understood {
+        width: 100%;
     }
 
 }
 
 
-/* =========================================================
-   CELULARES PEQUEÑOS
-========================================================= */
-
-@media (max-width: 360px) {
-
+@media (max-width: 400px) {
 
     .turn-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
 
     .current-turn-number {
         font-size: 60px;
+    }
+
+
+    .admin-buttons {
+        flex-direction: column;
+    }
+
+
+    .admin-buttons button {
+        width: 100%;
     }
 
 }
