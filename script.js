@@ -1,771 +1,1166 @@
 /* =========================================================
    SISTEMA DE TURNOS - ARENERA
-   ========================================================= */
+========================================================= */
+
+"use strict";
+
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
 
 const TOTAL_TURNOS = 25;
 
-const STORAGE_KEY = "turnero_manual_v5";
-const USERS_STORAGE_KEY = "turnero_users_v2";
+const STATE_KEY = "arenera_turnos_estado_v10";
+const USERS_KEY = "arenera_usuarios_v10";
+
 
 /* =========================================================
    ESTADO INICIAL
-   ========================================================= */
+========================================================= */
 
-const defaultState = {
+const estadoInicial = {
     current: null,
     called: [],
     delivered: []
 };
 
-const defaultUsers = [
+
+const usuariosIniciales = [
     {
         username: "admin",
         password: "admin123"
     }
 ];
 
+
 /* =========================================================
-   CARGAR DATOS
-   ========================================================= */
+   ESTADO
+========================================================= */
 
-function loadState() {
-    try {
-        const saved = localStorage.getItem(STORAGE_KEY);
+let state = cargarEstado();
 
-        if (!saved) {
-            return { ...defaultState };
-        }
+let users = cargarUsuarios();
 
-        const data = JSON.parse(saved);
-
-        return {
-            current: data.current || null,
-            called: Array.isArray(data.called) ? data.called : [],
-            delivered: Array.isArray(data.delivered) ? data.delivered : []
-        };
-    } catch (error) {
-        console.error("Error cargando el estado:", error);
-        return { ...defaultState };
-    }
-}
-
-function saveState() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (error) {
-        console.error("Error guardando el estado:", error);
-    }
-}
-
-function loadUsers() {
-    try {
-        const saved = localStorage.getItem(USERS_STORAGE_KEY);
-
-        if (!saved) {
-            return [...defaultUsers];
-        }
-
-        const users = JSON.parse(saved);
-
-        if (!Array.isArray(users) || users.length === 0) {
-            return [...defaultUsers];
-        }
-
-        return users;
-    } catch (error) {
-        console.error("Error cargando usuarios:", error);
-        return [...defaultUsers];
-    }
-}
-
-function saveUsers() {
-    try {
-        localStorage.setItem(
-            USERS_STORAGE_KEY,
-            JSON.stringify(users)
-        );
-    } catch (error) {
-        console.error("Error guardando usuarios:", error);
-    }
-}
-
-let state = loadState();
-let users = loadUsers();
 
 /* =========================================================
    ELEMENTOS HTML
-   ========================================================= */
+========================================================= */
 
-const currentTurn = document.getElementById("currentTurn");
-const currentMessage = document.getElementById("currentMessage");
+const currentTurn =
+    document.getElementById("currentTurn");
 
-const availableCount = document.getElementById("availableCount");
-const lastCalled = document.getElementById("lastCalled");
-const deliveredCount = document.getElementById("deliveredCount");
+const currentMessage =
+    document.getElementById("currentMessage");
 
-const turnGrid = document.getElementById("turnGrid");
-const currentDate = document.getElementById("currentDate");
+const availableCount =
+    document.getElementById("availableCount");
 
-/* Botones principales */
+const lastCalled =
+    document.getElementById("lastCalled");
 
-const openHelpButton = document.getElementById("openHelpButton");
-const openAdminButton = document.getElementById("openAdminButton");
+const deliveredCount =
+    document.getElementById("deliveredCount");
 
-/* Ayuda */
+const turnGrid =
+    document.getElementById("turnGrid");
 
-const helpMenu = document.getElementById("helpMenu");
-const closeHelpButton = document.getElementById("closeHelpButton");
-const understoodHelpButton = document.getElementById("understoodHelpButton");
+const currentDate =
+    document.getElementById("currentDate");
 
-/* Administración */
 
-const adminModal = document.getElementById("adminModal");
-const closeAdminButton = document.getElementById("closeAdminButton");
+/* AYUDA */
 
-const loginSection = document.getElementById("loginSection");
-const adminPanel = document.getElementById("adminPanel");
+const helpButton =
+    document.getElementById("helpButton");
 
-const loginUsername = document.getElementById("loginUsername");
-const loginPassword = document.getElementById("loginPassword");
-const loginButton = document.getElementById("loginButton");
-const loginError = document.getElementById("loginError");
+const helpModal =
+    document.getElementById("helpModal");
 
-/* Panel */
+const closeHelp =
+    document.getElementById("closeHelp");
 
-const adminCurrentTurn = document.getElementById("adminCurrentTurn");
+const understoodHelp =
+    document.getElementById("understoodHelp");
 
-const nextTurnButton = document.getElementById("nextTurnButton");
-const repeatTurnButton = document.getElementById("repeatTurnButton");
-const newDayButton = document.getElementById("newDayButton");
 
-const specificTurn = document.getElementById("specificTurn");
-const specificTurnButton = document.getElementById("specificTurnButton");
+/* ADMIN */
 
-const deliveredList = document.getElementById("deliveredList");
+const adminButton =
+    document.getElementById("adminButton");
 
-const newUsername = document.getElementById("newUsername");
-const newPassword = document.getElementById("newPassword");
-const addUserButton = document.getElementById("addUserButton");
-const usersList = document.getElementById("usersList");
+const adminModal =
+    document.getElementById("adminModal");
 
-const logoutButton = document.getElementById("logoutButton");
+const closeAdmin =
+    document.getElementById("closeAdmin");
+
+
+/* LOGIN */
+
+const loginSection =
+    document.getElementById("loginSection");
+
+const adminPanel =
+    document.getElementById("adminPanel");
+
+const username =
+    document.getElementById("username");
+
+const password =
+    document.getElementById("password");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginError =
+    document.getElementById("loginError");
+
+
+/* ADMINISTRACIÓN */
+
+const adminCurrentTurn =
+    document.getElementById("adminCurrentTurn");
+
+const nextTurnButton =
+    document.getElementById("nextTurnButton");
+
+const repeatTurnButton =
+    document.getElementById("repeatTurnButton");
+
+const newDayButton =
+    document.getElementById("newDayButton");
+
+const specificTurn =
+    document.getElementById("specificTurn");
+
+const specificTurnButton =
+    document.getElementById("specificTurnButton");
+
+const deliveredList =
+    document.getElementById("deliveredList");
+
+
+/* USUARIOS */
+
+const newUsername =
+    document.getElementById("newUsername");
+
+const newPassword =
+    document.getElementById("newPassword");
+
+const addUserButton =
+    document.getElementById("addUserButton");
+
+const usersList =
+    document.getElementById("usersList");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
 
 /* =========================================================
-   COMPROBAR ELEMENTOS
-   ========================================================= */
+   CARGAR ESTADO
+========================================================= */
 
-console.log("Sistema de turnos iniciado");
+function cargarEstado() {
 
-if (!currentTurn) {
-    console.error("No se encontró #currentTurn");
+    try {
+
+        const guardado =
+            localStorage.getItem(STATE_KEY);
+
+        if (!guardado) {
+
+            return {
+                current: null,
+                called: [],
+                delivered: []
+            };
+        }
+
+        const datos =
+            JSON.parse(guardado);
+
+        return {
+
+            current:
+                datos.current || null,
+
+            called:
+                Array.isArray(datos.called)
+                    ? datos.called
+                    : [],
+
+            delivered:
+                Array.isArray(datos.delivered)
+                    ? datos.delivered
+                    : []
+        };
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando estado:",
+            error
+        );
+
+        return {
+            current: null,
+            called: [],
+            delivered: []
+        };
+    }
 }
 
-if (!turnGrid) {
-    console.error("No se encontró #turnGrid");
+
+/* =========================================================
+   GUARDAR ESTADO
+========================================================= */
+
+function guardarEstado() {
+
+    try {
+
+        localStorage.setItem(
+            STATE_KEY,
+            JSON.stringify(state)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando estado:",
+            error
+        );
+    }
 }
+
+
+/* =========================================================
+   CARGAR USUARIOS
+========================================================= */
+
+function cargarUsuarios() {
+
+    try {
+
+        const guardados =
+            localStorage.getItem(USERS_KEY);
+
+        if (!guardados) {
+
+            return [
+                ...usuariosIniciales
+            ];
+        }
+
+        const datos =
+            JSON.parse(guardados);
+
+        if (
+            !Array.isArray(datos) ||
+            datos.length === 0
+        ) {
+
+            return [
+                ...usuariosIniciales
+            ];
+        }
+
+        return datos;
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando usuarios:",
+            error
+        );
+
+        return [
+            ...usuariosIniciales
+        ];
+    }
+}
+
+
+/* =========================================================
+   GUARDAR USUARIOS
+========================================================= */
+
+function guardarUsuarios() {
+
+    try {
+
+        localStorage.setItem(
+            USERS_KEY,
+            JSON.stringify(users)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando usuarios:",
+            error
+        );
+    }
+}
+
 
 /* =========================================================
    FORMATO DEL TURNO
-   ========================================================= */
+========================================================= */
 
-function formatTurn(number) {
-    if (!number) {
+function formatoTurno(numero) {
+
+    if (!numero) {
         return "---";
     }
 
-    return String(number).padStart(3, "0");
+    return String(numero).padStart(3, "0");
 }
+
 
 /* =========================================================
    FECHA
-   ========================================================= */
+========================================================= */
 
-function updateDate() {
-    if (!currentDate) return;
+function actualizarFecha() {
 
-    const now = new Date();
+    const ahora =
+        new Date();
 
-    const options = {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    };
-
-    currentDate.textContent = now.toLocaleDateString(
-        "es-CO",
-        options
-    );
+    currentDate.textContent =
+        ahora.toLocaleDateString(
+            "es-CO",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }
+        );
 }
+
 
 /* =========================================================
-   RENDER PRINCIPAL
-   ========================================================= */
+   RENDERIZAR TODO
+========================================================= */
 
 function render() {
-    renderCurrentTurn();
-    renderInformation();
-    renderTurnGrid();
-    renderDelivered();
-    renderUsers();
+
+    renderTurnoActual();
+
+    renderInformacion();
+
+    renderTurnos();
+
+    renderEntregados();
+
+    renderUsuarios();
 }
+
 
 /* =========================================================
    TURNO ACTUAL
-   ========================================================= */
+========================================================= */
 
-function renderCurrentTurn() {
+function renderTurnoActual() {
 
-    const turn = state.current;
+    const numero =
+        state.current;
 
-    if (currentTurn) {
-        currentTurn.textContent = formatTurn(turn);
-    }
 
-    if (adminCurrentTurn) {
-        adminCurrentTurn.textContent = formatTurn(turn);
-    }
+    currentTurn.textContent =
+        formatoTurno(numero);
 
-    if (!currentMessage) {
-        return;
-    }
 
-    if (!turn) {
+    adminCurrentTurn.textContent =
+        formatoTurno(numero);
+
+
+    if (!numero) {
+
         currentMessage.textContent =
             "Esperando el inicio de la jornada";
+
         return;
     }
 
-    if (state.delivered.includes(turn)) {
-        currentMessage.textContent =
-            "Turno atendido";
-        return;
-    }
 
     currentMessage.textContent =
         "Por favor, acérquese al punto de atención";
 }
 
+
 /* =========================================================
    INFORMACIÓN
-   ========================================================= */
+========================================================= */
 
-function renderInformation() {
+function renderInformacion() {
 
-    const called = state.called.length;
+    const llamados =
+        state.called.length;
 
-    const available = Math.max(
-        0,
-        TOTAL_TURNOS - called
-    );
 
-    if (availableCount) {
-        availableCount.textContent = available;
-    }
+    const disponibles =
+        Math.max(
+            0,
+            TOTAL_TURNOS - llamados
+        );
 
-    if (lastCalled) {
-        if (state.called.length > 0) {
-            const last =
-                state.called[state.called.length - 1];
 
-            lastCalled.textContent =
-                formatTurn(last);
-        } else {
-            lastCalled.textContent = "---";
-        }
-    }
+    availableCount.textContent =
+        disponibles;
 
-    if (deliveredCount) {
-        deliveredCount.textContent =
-            state.delivered.length;
-    }
-}
 
-/* =========================================================
-   CUADRÍCULA DE TURNOS
-   ========================================================= */
+    deliveredCount.textContent =
+        state.delivered.length;
 
-function renderTurnGrid() {
 
-    if (!turnGrid) return;
+    if (state.called.length === 0) {
 
-    turnGrid.innerHTML = "";
-
-    for (let i = 1; i <= TOTAL_TURNOS; i++) {
-
-        const card = document.createElement("div");
-
-        card.classList.add("turn-card");
-
-        const number = document.createElement("div");
-
-        number.classList.add("turn-number");
-
-        number.textContent = formatTurn(i);
-
-        const status = document.createElement("div");
-
-        status.classList.add("turn-status");
-
-        /* Turno actual */
-
-        if (state.current === i) {
-
-            card.classList.add("current");
-
-            status.textContent = "En atención";
-
-        }
-
-        /* Turno entregado */
-
-        else if (state.delivered.includes(i)) {
-
-            card.classList.add("delivered");
-
-            status.textContent = "Entregado";
-
-        }
-
-        /* Turno llamado anteriormente */
-
-        else if (state.called.includes(i)) {
-
-            card.classList.add("called");
-
-            status.textContent = "Llamado";
-
-        }
-
-        /* Turno disponible */
-
-        else {
-
-            status.textContent = "Disponible";
-        }
-
-        card.appendChild(number);
-        card.appendChild(status);
-
-        turnGrid.appendChild(card);
-    }
-}
-
-/* =========================================================
-   LISTA DE TURNOS ENTREGADOS
-   ========================================================= */
-
-function renderDelivered() {
-
-    if (!deliveredList) return;
-
-    deliveredList.innerHTML = "";
-
-    for (let i = 1; i <= TOTAL_TURNOS; i++) {
-
-        const item = document.createElement("div");
-
-        item.classList.add("delivered-item");
-
-        const number = document.createElement("span");
-
-        number.textContent =
-            "Turno " + formatTurn(i);
-
-        const button = document.createElement("button");
-
-        if (state.delivered.includes(i)) {
-
-            button.textContent = "Quitar";
-
-            button.addEventListener(
-                "click",
-                function () {
-                    toggleDelivered(i);
-                }
-            );
-
-        } else {
-
-            button.textContent = "Entregar";
-
-            button.addEventListener(
-                "click",
-                function () {
-                    toggleDelivered(i);
-                }
-            );
-        }
-
-        item.appendChild(number);
-        item.appendChild(button);
-
-        deliveredList.appendChild(item);
-    }
-}
-
-/* =========================================================
-   ENTREGAR / QUITAR TURNO
-   ========================================================= */
-
-function toggleDelivered(number) {
-
-    if (state.delivered.includes(number)) {
-
-        state.delivered =
-            state.delivered.filter(
-                item => item !== number
-            );
+        lastCalled.textContent =
+            "---";
 
     } else {
 
-        state.delivered.push(number);
+        const ultimo =
+            state.called[
+                state.called.length - 1
+            ];
 
-        if (!state.called.includes(number)) {
-            state.called.push(number);
-        }
+        lastCalled.textContent =
+            formatoTurno(ultimo);
     }
-
-    saveState();
-    render();
 }
+
+
+/* =========================================================
+   CREAR LOS 25 TURNOS
+========================================================= */
+
+function renderTurnos() {
+
+    turnGrid.innerHTML = "";
+
+
+    for (
+        let numero = 1;
+        numero <= TOTAL_TURNOS;
+        numero++
+    ) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "turn-card";
+
+
+        const numeroElemento =
+            document.createElement("div");
+
+        numeroElemento.className =
+            "turn-number";
+
+        numeroElemento.textContent =
+            formatoTurno(numero);
+
+
+        const estadoElemento =
+            document.createElement("div");
+
+        estadoElemento.className =
+            "turn-status";
+
+
+        /* TURNO ACTUAL */
+
+        if (
+            state.current === numero
+        ) {
+
+            card.classList.add(
+                "current"
+            );
+
+            estadoElemento.textContent =
+                "En atención";
+        }
+
+
+        /* ENTREGADO */
+
+        else if (
+            state.delivered.includes(
+                numero
+            )
+        ) {
+
+            card.classList.add(
+                "delivered"
+            );
+
+            estadoElemento.textContent =
+                "Entregado";
+        }
+
+
+        /* LLAMADO */
+
+        else if (
+            state.called.includes(
+                numero
+            )
+        ) {
+
+            card.classList.add(
+                "called"
+            );
+
+            estadoElemento.textContent =
+                "Llamado";
+        }
+
+
+        /* DISPONIBLE */
+
+        else {
+
+            estadoElemento.textContent =
+                "Disponible";
+        }
+
+
+        card.appendChild(
+            numeroElemento
+        );
+
+        card.appendChild(
+            estadoElemento
+        );
+
+        turnGrid.appendChild(
+            card
+        );
+    }
+}
+
 
 /* =========================================================
    LLAMAR TURNO
-   ========================================================= */
+========================================================= */
 
-function callTurn(number) {
+function llamarTurno(numero) {
+
+    numero =
+        Number(numero);
+
 
     if (
-        number < 1 ||
-        number > TOTAL_TURNOS
+        numero < 1 ||
+        numero > TOTAL_TURNOS
     ) {
+
+        alert(
+            "El turno debe estar entre 1 y 25."
+        );
+
         return;
     }
 
-    if (!state.called.includes(number)) {
-        state.called.push(number);
+
+    /* Agregar a llamados */
+
+    if (
+        !state.called.includes(
+            numero
+        )
+    ) {
+
+        state.called.push(
+            numero
+        );
     }
 
-    state.current = number;
 
-    saveState();
+    /* Establecer turno actual */
+
+    state.current =
+        numero;
+
+
+    guardarEstado();
+
     render();
 
-    announceTurn(number);
+    anunciarTurno(numero);
 }
+
 
 /* =========================================================
    LLAMAR SIGUIENTE
-   ========================================================= */
+========================================================= */
 
-function callNext() {
+function llamarSiguiente() {
 
-    let next = null;
+    let siguiente =
+        null;
 
-    for (let i = 1; i <= TOTAL_TURNOS; i++) {
 
-        if (!state.called.includes(i)) {
+    for (
+        let numero = 1;
+        numero <= TOTAL_TURNOS;
+        numero++
+    ) {
 
-            next = i;
+        if (
+            !state.called.includes(
+                numero
+            )
+        ) {
+
+            siguiente =
+                numero;
+
             break;
         }
     }
 
-    if (!next) {
+
+    if (!siguiente) {
 
         alert(
-            "Todos los turnos de la jornada ya fueron llamados."
+            "Todos los turnos ya fueron llamados."
         );
 
         return;
     }
 
-    callTurn(next);
+
+    llamarTurno(
+        siguiente
+    );
 }
 
-/* =========================================================
-   REPETIR TURNO
-   ========================================================= */
 
-function repeatCurrent() {
+/* =========================================================
+   REPETIR
+========================================================= */
+
+function repetirTurno() {
 
     if (!state.current) {
 
         alert(
-            "No hay ningún turno llamado."
+            "No hay un turno actualmente llamado."
         );
 
         return;
     }
 
-    announceTurn(state.current);
+
+    anunciarTurno(
+        state.current
+    );
 }
 
+
 /* =========================================================
-   LLAMAR TURNO ESPECÍFICO
-   ========================================================= */
+   LLAMAR ESPECÍFICO
+========================================================= */
 
-function callSpecificTurn() {
+function llamarEspecifico() {
 
-    if (!specificTurn) return;
+    const numero =
+        Number(
+            specificTurn.value
+        );
 
-    const number =
-        parseInt(specificTurn.value, 10);
 
     if (
-        isNaN(number) ||
-        number < 1 ||
-        number > TOTAL_TURNOS
+        !Number.isInteger(numero) ||
+        numero < 1 ||
+        numero > TOTAL_TURNOS
     ) {
 
         alert(
-            "Ingrese un número de turno entre 1 y 25."
+            "Ingrese un turno válido entre 1 y 25."
         );
 
         return;
     }
 
-    callTurn(number);
 
-    specificTurn.value = "";
+    llamarTurno(
+        numero
+    );
+
+
+    specificTurn.value =
+        "";
 }
 
-/* =========================================================
-   ANUNCIO DE VOZ
-   ========================================================= */
 
-function announceTurn(number) {
+/* =========================================================
+   VOZ
+========================================================= */
+
+function anunciarTurno(numero) {
 
     if (
-        typeof window.speechSynthesis ===
-        "undefined"
+        !("speechSynthesis" in window)
     ) {
+
         return;
     }
+
 
     window.speechSynthesis.cancel();
 
-    const text =
-        "Turno " +
-        formatTurn(number) +
-        ". Por favor, acérquese al punto de atención.";
 
-    const speech =
-        new SpeechSynthesisUtterance(text);
+    const mensaje =
+        new SpeechSynthesisUtterance(
+            "Turno " +
+            formatoTurno(numero) +
+            ". Por favor, acérquese al punto de atención."
+        );
 
-    speech.lang = "es-CO";
-    speech.rate = 0.9;
-    speech.pitch = 1;
-    speech.volume = 1;
 
-    window.speechSynthesis.speak(speech);
+    mensaje.lang =
+        "es-CO";
+
+    mensaje.rate =
+        0.9;
+
+    mensaje.pitch =
+        1;
+
+    mensaje.volume =
+        1;
+
+
+    window.speechSynthesis.speak(
+        mensaje
+    );
 }
+
 
 /* =========================================================
    NUEVA JORNADA
-   ========================================================= */
+========================================================= */
 
-function newDay() {
+function nuevaJornada() {
 
-    const confirmReset =
+    const confirmar =
         confirm(
-            "¿Está seguro de iniciar una nueva jornada?\n\nSe reiniciarán todos los turnos."
+            "¿Está seguro de iniciar una nueva jornada?\n\nTodos los turnos volverán a estar disponibles."
         );
 
-    if (!confirmReset) {
+
+    if (!confirmar) {
         return;
     }
 
+
     state = {
+
         current: null,
+
         called: [],
+
         delivered: []
     };
 
-    saveState();
+
+    guardarEstado();
+
     render();
+
 
     alert(
-        "La nueva jornada ha comenzado."
+        "Nueva jornada iniciada correctamente."
     );
 }
 
-/* =========================================================
-   AYUDA
-   ========================================================= */
-
-function openHelp() {
-
-    if (!helpMenu) return;
-
-    helpMenu.classList.add("active");
-
-    document.body.classList.add(
-        "modal-open"
-    );
-}
-
-function closeHelp() {
-
-    if (!helpMenu) return;
-
-    helpMenu.classList.remove("active");
-
-    document.body.classList.remove(
-        "modal-open"
-    );
-}
 
 /* =========================================================
-   ADMINISTRACIÓN
-   ========================================================= */
+   TURNOS ENTREGADOS
+========================================================= */
 
-function openAdmin() {
+function renderEntregados() {
 
-    if (!adminModal) return;
+    deliveredList.innerHTML = "";
 
-    adminModal.classList.add("active");
 
-    showLogin();
+    for (
+        let numero = 1;
+        numero <= TOTAL_TURNOS;
+        numero++
+    ) {
 
-    if (loginUsername) {
-        setTimeout(function () {
-            loginUsername.focus();
-        }, 100);
+        const fila =
+            document.createElement("div");
+
+        fila.className =
+            "delivered-item";
+
+
+        const texto =
+            document.createElement("span");
+
+        texto.textContent =
+            "Turno " +
+            formatoTurno(numero);
+
+
+        const boton =
+            document.createElement("button");
+
+
+        const entregado =
+            state.delivered.includes(
+                numero
+            );
+
+
+        if (entregado) {
+
+            boton.textContent =
+                "Quitar";
+
+        } else {
+
+            boton.textContent =
+                "Entregar";
+        }
+
+
+        boton.addEventListener(
+            "click",
+            function () {
+
+                cambiarEstadoEntregado(
+                    numero
+                );
+            }
+        );
+
+
+        fila.appendChild(
+            texto
+        );
+
+        fila.appendChild(
+            boton
+        );
+
+
+        deliveredList.appendChild(
+            fila
+        );
     }
 }
 
-function closeAdmin() {
-
-    if (!adminModal) return;
-
-    adminModal.classList.remove("active");
-}
 
 /* =========================================================
-   MOSTRAR LOGIN
-   ========================================================= */
+   CAMBIAR ENTREGADO
+========================================================= */
 
-function showLogin() {
+function cambiarEstadoEntregado(numero) {
 
-    if (loginSection) {
-        loginSection.style.display = "block";
+    const indice =
+        state.delivered.indexOf(
+            numero
+        );
+
+
+    if (indice !== -1) {
+
+        state.delivered.splice(
+            indice,
+            1
+        );
+
+    } else {
+
+        state.delivered.push(
+            numero
+        );
+
+
+        if (
+            !state.called.includes(
+                numero
+            )
+        ) {
+
+            state.called.push(
+                numero
+            );
+        }
     }
 
-    if (adminPanel) {
-        adminPanel.style.display = "none";
-    }
 
-    if (loginError) {
-        loginError.style.display = "none";
-    }
-
-    if (loginUsername) {
-        loginUsername.value = "";
-    }
-
-    if (loginPassword) {
-        loginPassword.value = "";
-    }
-}
-
-/* =========================================================
-   MOSTRAR PANEL
-   ========================================================= */
-
-function showAdminPanel() {
-
-    if (loginSection) {
-        loginSection.style.display = "none";
-    }
-
-    if (adminPanel) {
-        adminPanel.style.display = "block";
-    }
+    guardarEstado();
 
     render();
 }
+
 
 /* =========================================================
    LOGIN
-   ========================================================= */
+========================================================= */
 
-function login() {
+function iniciarSesion() {
 
-    const username =
-        loginUsername
-            ? loginUsername.value.trim()
-            : "";
+    const usuario =
+        username.value.trim();
 
-    const password =
-        loginPassword
-            ? loginPassword.value
-            : "";
+    const clave =
+        password.value;
 
-    const user = users.find(
-        item =>
-            item.username === username &&
-            item.password === password
-    );
 
-    if (!user) {
+    const encontrado =
+        users.find(
+            function (user) {
 
-        if (loginError) {
-            loginError.style.display = "block";
-        }
+                return (
+                    user.username === usuario &&
+                    user.password === clave
+                );
+            }
+        );
+
+
+    if (!encontrado) {
+
+        loginError.style.display =
+            "block";
 
         return;
     }
 
-    if (loginError) {
-        loginError.style.display = "none";
-    }
 
-    showAdminPanel();
+    loginError.style.display =
+        "none";
+
+
+    loginSection.classList.add(
+        "hidden"
+    );
+
+
+    adminPanel.classList.remove(
+        "hidden"
+    );
+
+
+    render();
 }
+
 
 /* =========================================================
    CERRAR SESIÓN
-   ========================================================= */
+========================================================= */
 
-function logout() {
+function cerrarSesion() {
 
-    showLogin();
+    adminPanel.classList.add(
+        "hidden"
+    );
 
+
+    loginSection.classList.remove(
+        "hidden"
+    );
+
+
+    username.value =
+        "";
+
+    password.value =
+        "";
+
+    loginError.style.display =
+        "none";
 }
+
+
+/* =========================================================
+   MOSTRAR ADMINISTRACIÓN
+========================================================= */
+
+function abrirAdministracion() {
+
+    adminModal.classList.add(
+        "active"
+    );
+
+
+    adminPanel.classList.add(
+        "hidden"
+    );
+
+
+    loginSection.classList.remove(
+        "hidden"
+    );
+
+
+    username.value =
+        "";
+
+    password.value =
+        "";
+
+    loginError.style.display =
+        "none";
+
+
+    setTimeout(
+        function () {
+
+            username.focus();
+
+        },
+        100
+    );
+}
+
+
+/* =========================================================
+   CERRAR ADMINISTRACIÓN
+========================================================= */
+
+function cerrarAdministracion() {
+
+    adminModal.classList.remove(
+        "active"
+    );
+}
+
+
+/* =========================================================
+   AYUDA
+========================================================= */
+
+function abrirAyuda() {
+
+    helpModal.classList.add(
+        "active"
+    );
+}
+
+
+function cerrarAyuda() {
+
+    helpModal.classList.remove(
+        "active"
+    );
+}
+
+
+/* =========================================================
+   USUARIOS
+========================================================= */
+
+function renderUsuarios() {
+
+    usersList.innerHTML = "";
+
+
+    users.forEach(
+        function (user, index) {
+
+            const fila =
+                document.createElement("div");
+
+            fila.className =
+                "user-item";
+
+
+            const nombre =
+                document.createElement("span");
+
+            nombre.textContent =
+                user.username;
+
+
+            const boton =
+                document.createElement("button");
+
+            boton.textContent =
+                "Eliminar";
+
+
+            boton.addEventListener(
+                "click",
+                function () {
+
+                    eliminarUsuario(
+                        index
+                    );
+                }
+            );
+
+
+            fila.appendChild(
+                nombre
+            );
+
+            fila.appendChild(
+                boton
+            );
+
+
+            usersList.appendChild(
+                fila
+            );
+        }
+    );
+}
+
 
 /* =========================================================
    AGREGAR USUARIO
-   ========================================================= */
+========================================================= */
 
-function addUser() {
+function agregarUsuario() {
 
-    if (!newUsername || !newPassword) {
-        return;
-    }
-
-    const username =
+    const nombre =
         newUsername.value.trim();
 
-    const password =
+    const clave =
         newPassword.value;
 
-    if (!username || !password) {
+
+    if (
+        !nombre ||
+        !clave
+    ) {
 
         alert(
-            "Ingrese un usuario y una contraseña."
+            "Ingrese usuario y contraseña."
         );
 
         return;
     }
 
-    const exists = users.some(
-        user =>
-            user.username.toLowerCase() ===
-            username.toLowerCase()
-    );
 
-    if (exists) {
+    const existe =
+        users.some(
+            function (user) {
+
+                return (
+                    user.username.toLowerCase() ===
+                    nombre.toLowerCase()
+                );
+            }
+        );
+
+
+    if (existe) {
 
         alert(
             "Ese usuario ya existe."
@@ -774,177 +1169,23 @@ function addUser() {
         return;
     }
 
+
     users.push({
-        username: username,
-        password: password
+
+        username:
+            nombre,
+
+        password:
+            clave
     });
 
-    saveUsers();
-    renderUsers();
 
-    newUsername.value = "";
-    newPassword.value = "";
+    guardarUsuarios();
 
-    alert(
-        "Usuario agregado correctamente."
-    );
-}
+    renderUsuarios();
 
-/* =========================================================
-   MOSTRAR USUARIOS
-   ========================================================= */
 
-function renderUsers() {
+    newUsername.value =
+        "";
 
-    if (!usersList) return;
-
-    usersList.innerHTML = "";
-
-    users.forEach(
-        function (user, index) {
-
-            const item =
-                document.createElement("div");
-
-            item.classList.add("user-item");
-
-            const name =
-                document.createElement("span");
-
-            name.textContent =
-                user.username;
-
-            const button =
-                document.createElement("button");
-
-            button.textContent =
-                "Eliminar";
-
-            /*
-             * No permitimos eliminar el último
-             * usuario administrador.
-             */
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    if (users.length === 1) {
-
-                        alert(
-                            "Debe existir al menos un usuario."
-                        );
-
-                        return;
-                    }
-
-                    const confirmDelete =
-                        confirm(
-                            "¿Desea eliminar el usuario " +
-                            user.username +
-                            "?"
-                        );
-
-                    if (!confirmDelete) {
-                        return;
-                    }
-
-                    users.splice(index, 1);
-
-                    saveUsers();
-                    renderUsers();
-                }
-            );
-
-            item.appendChild(name);
-            item.appendChild(button);
-
-            usersList.appendChild(item);
-        }
-    );
-}
-
-/* =========================================================
-   EVENTOS
-   ========================================================= */
-
-/* Ayuda */
-
-if (openHelpButton) {
-
-    openHelpButton.addEventListener(
-        "click",
-        openHelp
-    );
-}
-
-if (closeHelpButton) {
-
-    closeHelpButton.addEventListener(
-        "click",
-        closeHelp
-    );
-}
-
-if (understoodHelpButton) {
-
-    understoodHelpButton.addEventListener(
-        "click",
-        closeHelp
-    );
-}
-
-/* Administración */
-
-if (openAdminButton) {
-
-    openAdminButton.addEventListener(
-        "click",
-        openAdmin
-    );
-}
-
-if (closeAdminButton) {
-
-    closeAdminButton.addEventListener(
-        "click",
-        closeAdmin
-    );
-}
-
-/* Login */
-
-if (loginButton) {
-
-    loginButton.addEventListener(
-        "click",
-        login
-    );
-}
-
-if (loginPassword) {
-
-    loginPassword.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (event.key === "Enter") {
-                login();
-            }
-        }
-    );
-}
-
-/* Administración */
-
-if (nextTurnButton) {
-
-    nextTurnButton.addEventListener(
-        "click",
-        callNext
-    );
-}
-
-if (repeatTurnButton) {
-
-    repeatTurnButton.a
+    newPassword.value 
